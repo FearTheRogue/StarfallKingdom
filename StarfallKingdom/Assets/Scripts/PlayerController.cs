@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
 using UnityEngine.Animations;
+using System;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
@@ -9,6 +10,8 @@ public class PlayerController : MonoBehaviour
 {
     private static readonly int IdleHash = Animator.StringToHash("Idle");
     private static readonly int WalkHash = Animator.StringToHash("Walk");
+    private static readonly int AttackHash = Animator.StringToHash("Attack");
+    private static readonly int PickupHash = Animator.StringToHash("Pickup");
 
     [Header("Movement")]
     [SerializeField] private ParticleSystem clickEffect;
@@ -17,12 +20,21 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float lookRotationSpeed = 8f;
     [SerializeField] private float movementTreshold = 0.01f;
 
+    [Header("Attack")]
+    [SerializeField] private float attackSpeed = 1.5f;
+    [SerializeField] private float attackDelay = 0.3f;
+    [SerializeField] private float attackDistance = 1.5f;
+    [SerializeField] private int attackDamage = 1;
+    [SerializeField] private ParticleSystem hitEffect;
+
     private CustomActions input;
     private NavMeshAgent agent;
     private Animator animator;
     private Camera cam;
 
     private int currentAnimationState;
+    private bool playerBusy = false;
+    Interactable target;
 
     private void Awake()
     {
@@ -48,8 +60,17 @@ public class PlayerController : MonoBehaviour
 
         if (Physics.Raycast(ray, out RaycastHit hit, maxClickDistance, clickableLayers)) 
         {
-            agent.SetDestination(hit.point);
-            SpawnClickEffect(hit.point);
+            if (hit.transform.CompareTag("Interactable"))
+            {
+                target = hit.transform.GetComponent<Interactable>();
+                SpawnClickEffect(hit.point);
+            }
+            else
+            {
+                target = null;
+                agent.SetDestination(hit.point);
+                SpawnClickEffect(hit.point);
+            }
         }
     }
 
@@ -64,7 +85,68 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        FollowTarget();
         FaceMovementDirection();
+        UpdateAnimationState();
+    }
+
+    private void FollowTarget()
+    {
+        if (target == null) return;
+
+        if (Vector3.Distance(target.transform.position, transform.position) <= attackDistance)
+        {
+            ReachDistance();
+        }
+        else
+        {
+            agent.SetDestination(target.transform.position);
+        }
+    }
+
+    private void ReachDistance()
+    {
+        agent.SetDestination(transform.position);
+
+        if (playerBusy) return;
+        playerBusy = true;
+
+        switch (target.interactionType)
+        {
+            case InteractionTypes.Enemy:
+                animator.Play(AttackHash);
+
+                Invoke(nameof(SendAttack), attackDelay);
+                Invoke(nameof(ResetBusyState), attackSpeed);
+                break;
+            case InteractionTypes.Item:
+                animator.Play(PickupHash);
+
+                target.InteractWithItem();
+                target = null;
+
+                Invoke(nameof(ResetBusyState), 0.5f);
+                break;
+        }
+    }
+
+    private void SendAttack()
+    {
+        if (target == null) return;
+
+        if (target.myActor.currentHealth <= 0)
+        {
+            target = null;
+            return;
+        }
+
+        Instantiate(hitEffect, target.transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+        target.GetComponent<Actor>().TakeDamage(attackDamage);
+    }
+
+    private void ResetBusyState()
+    {
+        playerBusy = false;
         UpdateAnimationState();
     }
 
@@ -83,6 +165,8 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateAnimationState()
     {
+        if (playerBusy) return;
+
         if (agent.velocity.sqrMagnitude <= movementTreshold)
         {
             ChangeAnimationState(IdleHash);
