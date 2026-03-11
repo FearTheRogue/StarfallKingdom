@@ -59,6 +59,7 @@ public class PlayerController : MonoBehaviour
 
         Vector3 spawnPosition = position + new Vector3(0f, 0.1f, 0f);
         Instantiate(clickEffect, spawnPosition, clickEffect.transform.rotation);
+        //Destroy(clickEffect, 2f);
     }
 
     private void Update()
