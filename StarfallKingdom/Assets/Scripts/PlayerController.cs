@@ -47,6 +47,31 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void Update()
+    {
+        FaceTarget();
+        SetAnimations();
+    }
+
+    private void FaceTarget()
+    {
+        Vector3 direction = (agent.destination - transform.position).normalized;
+        Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
+        transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
+    }
+
+    private void SetAnimations()
+    {
+        if (agent.velocity == Vector3.zero)
+        {
+            animator.Play(IDLE);
+        }
+        else
+        {
+            animator.Play(WALK);
+        }
+    }
+
     private void OnEnable()
     {
         input.Enable();
