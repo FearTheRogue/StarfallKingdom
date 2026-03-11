@@ -409,7 +409,7 @@ GameObject:
   m_Component:
   - component: {fileID: 549732775}
   - component: {fileID: 549732774}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Environment
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -503,10 +503,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 899958e60bc39eb439ce87f56aba5d04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  clickEffect: {fileID: 0}
+  clickEffect: {fileID: 4551786024391445463, guid: 85ba25fbbd171ff41ba6160d4a4b149c, type: 3}
   clickableLayers:
     serializedVersion: 2
-    m_Bits: 1
+    m_Bits: 65
 --- !u!195 &644656598
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -546,7 +546,7 @@ GameObject:
   - component: {fileID: 797255329}
   - component: {fileID: 797255328}
   - component: {fileID: 797255327}
-  m_Layer: 0
+  m_Layer: 6
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
