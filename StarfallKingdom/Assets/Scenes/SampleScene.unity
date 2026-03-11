@@ -506,7 +506,10 @@ MonoBehaviour:
   clickEffect: {fileID: 4551786024391445463, guid: 85ba25fbbd171ff41ba6160d4a4b149c, type: 3}
   clickableLayers:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 64
+  maxClickDistance: 100
+  lookRotationSpeed: 8
+  movementTreshold: 0.01
 --- !u!195 &644656598
 NavMeshAgent:
   m_ObjectHideFlags: 0

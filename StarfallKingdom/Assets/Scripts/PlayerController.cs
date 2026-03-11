@@ -3,28 +3,35 @@ using UnityEngine.InputSystem;
 using UnityEngine.AI;
 using UnityEngine.Animations;
 
+[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent(typeof(Animator))]
 public class PlayerController : MonoBehaviour
 {
-    const string IDLE = "Idle";
-    const string WALK = "Walk";
-
-    CustomActions input;
-    NavMeshAgent agent;
-    Animator animator;
+    private static readonly int IdleHash = Animator.StringToHash("Idle");
+    private static readonly int WalkHash = Animator.StringToHash("Walk");
 
     [Header("Movement")]
-    [SerializeField] ParticleSystem clickEffect;
-    [SerializeField] LayerMask clickableLayers;
+    [SerializeField] private ParticleSystem clickEffect;
+    [SerializeField] private LayerMask clickableLayers;
+    [SerializeField] private float maxClickDistance = 100f;
+    [SerializeField] private float lookRotationSpeed = 8f;
+    [SerializeField] private float movementTreshold = 0.01f;
 
-    float lookRotationSpeed = 8f;
+    private CustomActions input;
+    private NavMeshAgent agent;
+    private Animator animator;
+    private Camera cam;
+
+    private int currentAnimationState;
 
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         animator = GetComponent<Animator>();
+        cam = Camera.main;
 
         input = new CustomActions();
-        AssignInputs();
+        input.Main.Move.performed += OnMovePerformed;
     }
 
     private void AssignInputs()
@@ -34,45 +41,68 @@ public class PlayerController : MonoBehaviour
 
     private void ClickToMove()
     {
-        RaycastHit hit;
+        if (cam == null || Mouse.current == null) return;
 
-        if (Physics.Raycast(Camera.main.ScreenPointToRay(Input.mousePosition), out hit, 100, clickableLayers))
+        Vector2 mousePosition = Mouse.current.position.ReadValue();
+        Ray ray = cam.ScreenPointToRay(mousePosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit, maxClickDistance, clickableLayers)) 
         {
-            agent.destination = hit.point;
-
-            if (clickEffect != null)
-            {
-                Instantiate(clickEffect, hit.point += new Vector3(0, 0.1f, 0), clickEffect.transform.rotation);
-            }
+            agent.SetDestination(hit.point);
+            SpawnClickEffect(hit.point);
         }
+    }
+
+    private void SpawnClickEffect(Vector3 position)
+    {
+        if (clickEffect == null) return;
+
+        Vector3 spawnPosition = position + new Vector3(0f, 0.1f, 0f);
+        Instantiate(clickEffect, spawnPosition, clickEffect.transform.rotation);
     }
 
     private void Update()
     {
-        FaceTarget();
-        SetAnimations();
+        FaceMovementDirection();
+        UpdateAnimationState();
     }
 
-    private void FaceTarget()
+    private void FaceMovementDirection()
     {
-        if (agent.velocity != Vector3.zero)
-        {
-            Vector3 direction = (agent.destination - transform.position).normalized;
-            Quaternion lookRotation = Quaternion.LookRotation(new Vector3(direction.x, 0, direction.z));
-            transform.rotation = Quaternion.Slerp(transform.rotation, lookRotation, Time.deltaTime * lookRotationSpeed);
-        }
+        if (agent.velocity.sqrMagnitude <= movementTreshold) return;
+
+        Vector3 direction = agent.velocity.normalized;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude <= 0f) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * lookRotationSpeed);
     }
 
-    private void SetAnimations()
+    private void UpdateAnimationState()
     {
-        if (agent.velocity == Vector3.zero)
+        if (agent.velocity.sqrMagnitude <= movementTreshold)
         {
-            animator.Play(IDLE);
+            ChangeAnimationState(IdleHash);
         }
         else
         {
-            animator.Play(WALK);
+            ChangeAnimationState(WalkHash);
         }
+    }
+
+    private void ChangeAnimationState(int newState)
+    {
+        if (currentAnimationState == newState) return;
+
+        animator.Play(newState);
+        currentAnimationState = newState;
+    }
+
+    private void OnMovePerformed(InputAction.CallbackContext context)
+    {
+        ClickToMove();
     }
 
     private void OnEnable()
@@ -83,5 +113,10 @@ public class PlayerController : MonoBehaviour
     private void OnDisable()
     {
         input.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        input.Main.Move.performed -= OnMovePerformed;
     }
 }
