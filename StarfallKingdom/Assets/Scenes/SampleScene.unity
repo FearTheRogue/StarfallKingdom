@@ -1693,6 +1693,7 @@ GameObject:
   - component: {fileID: 644656598}
   - component: {fileID: 644656600}
   - component: {fileID: 644656597}
+  - component: {fileID: 919132148444145754}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1700,6 +1701,18 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
+--- !u!114 &919132148444145754
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148444145753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74f26a116bbe4b44192d0680b8e662dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAnimationController
 --- !u!1 &919132148973134528
 GameObject:
   m_ObjectHideFlags: 0

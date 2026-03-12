@@ -1,7 +1,7 @@
 using UnityEditor.Timeline.Actions;
 using UnityEngine;
 
-[RequireComponent(typeof(Animation))]
+[RequireComponent(typeof(Animator))]
 public class CharacterAnimationController : MonoBehaviour
 {
     private static readonly int SpeedHash = Animator.StringToHash("Speed");
@@ -17,7 +17,7 @@ public class CharacterAnimationController : MonoBehaviour
         animator = GetComponent<Animator>();
     }
 
-    public void SetSpeed(float speed)
+    public void SetMoveSpeed(float speed)
     {
         animator.SetFloat(SpeedHash, speed);
     }
