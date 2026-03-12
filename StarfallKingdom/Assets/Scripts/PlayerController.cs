@@ -1,8 +1,10 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
-using UnityEngine.Animations;
-using System;
+using System.Collections;
+using Unity.VisualScripting;
+using Mono.Cecil;
+using System.Diagnostics.SymbolStore;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(Animator))]
@@ -18,7 +20,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private LayerMask clickableLayers;
     [SerializeField] private float maxClickDistance = 100f;
     [SerializeField] private float lookRotationSpeed = 8f;
-    [SerializeField] private float movementTreshold = 0.01f;
+    [SerializeField] private float movementThreshold = 0.01f;
 
     [Header("Attack")]
     [SerializeField] private float attackSpeed = 1.5f;
@@ -32,9 +34,10 @@ public class PlayerController : MonoBehaviour
     private Animator animator;
     private Camera cam;
 
+    private Interactable target;
+    private Coroutine actionRoutine;
     private int currentAnimationState;
-    private bool playerBusy = false;
-    Interactable target;
+    private bool isBusy = false;
 
     private void Awake()
     {
@@ -46,32 +49,35 @@ public class PlayerController : MonoBehaviour
         input.Main.Move.performed += OnMovePerformed;
     }
 
-    private void AssignInputs()
+    private void Update()
     {
-        input.Main.Move.performed += ctx => ClickToMove();
+        UpdateTargetMovement();
+        FaceCurrentDirection();
+        UpdateAnimationState();
     }
 
-    private void ClickToMove()
+    private void HandleClick()
     {
         if (cam == null || Mouse.current == null) return;
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();
         Ray ray = cam.ScreenPointToRay(mousePosition);
 
-        if (Physics.Raycast(ray, out RaycastHit hit, maxClickDistance, clickableLayers)) 
+        if (!Physics.Raycast(ray, out RaycastHit hit, maxClickDistance, clickableLayers))
         {
-            if (hit.transform.CompareTag("Interactable"))
-            {
-                target = hit.transform.GetComponent<Interactable>();
-                SpawnClickEffect(hit.point);
-            }
-            else
-            {
-                target = null;
-                agent.SetDestination(hit.point);
-                SpawnClickEffect(hit.point);
-            }
+            return;
         }
+
+        SpawnClickEffect(hit.point);
+
+        if (hit.transform.CompareTag("Interactable"))
+        {
+            target = hit.transform.GetComponent<Interactable>();
+            return;
+        }
+
+        ClearTarget();
+        agent.SetDestination(hit.point);
     }
 
     private void SpawnClickEffect(Vector3 position)
@@ -80,79 +86,127 @@ public class PlayerController : MonoBehaviour
 
         Vector3 spawnPosition = position + new Vector3(0f, 0.1f, 0f);
         Instantiate(clickEffect, spawnPosition, clickEffect.transform.rotation);
-        //Destroy(clickEffect, 2f);
     }
 
-    private void Update()
+    private bool HasValidTarget()
     {
-        FollowTarget();
-        FaceMovementDirection();
-        UpdateAnimationState();
+        return target != null && target.gameObject != null;
     }
 
-    private void FollowTarget()
+    private void ClearTarget()
     {
-        if (target == null) return;
+        target = null;
 
-        if (Vector3.Distance(target.transform.position, transform.position) <= attackDistance)
+        if (actionRoutine != null)
         {
-            ReachDistance();
+            StopCoroutine(actionRoutine);
+            actionRoutine = null;
         }
-        else
+
+        isBusy = false;
+    }
+
+    private void StartActionRoutine(IEnumerator routine)
+    {
+        if (actionRoutine != null)
+        {
+            StopCoroutine(actionRoutine);
+        }
+
+        actionRoutine = StartCoroutine(routine);
+    }
+
+    private void UpdateTargetMovement()
+    {
+        if (!HasValidTarget()) return;
+
+        float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+
+        if (distanceToTarget <= attackDistance)
+        {
+            TryInteractWithTarget();
+        }
+        else if (!isBusy)
         {
             agent.SetDestination(target.transform.position);
         }
     }
 
-    private void ReachDistance()
+    private void TryInteractWithTarget()
     {
-        agent.SetDestination(transform.position);
+        if (isBusy || !HasValidTarget()) return;
 
-        if (playerBusy) return;
-        playerBusy = true;
+        agent.SetDestination(transform.position);
+        FaceTarget(target.transform.position);
 
         switch (target.interactionType)
         {
             case InteractionTypes.Enemy:
-                animator.Play(AttackHash);
-
-                Invoke(nameof(SendAttack), attackDelay);
-                Invoke(nameof(ResetBusyState), attackSpeed);
+                StartActionRoutine(AttackRoutine());
                 break;
             case InteractionTypes.Item:
-                animator.Play(PickupHash);
-
-                target.InteractWithItem();
-                target = null;
-
-                Invoke(nameof(ResetBusyState), 0.5f);
+                StartActionRoutine(PickupRoutine());
                 break;
         }
     }
 
-    private void SendAttack()
+    private IEnumerator AttackRoutine()
     {
-        if (target == null) return;
+        isBusy = true;
+        ChangeAnimationState(AttackHash);
 
-        if (target.myActor.currentHealth <= 0)
+        yield return new WaitForSeconds(attackDelay);
+        ApplyAttack();
+
+        yield return new WaitForSeconds(Mathf.Max(0f, attackSpeed - attackDelay));
+        isBusy = false;
+    }
+
+    private IEnumerator PickupRoutine()
+    {
+        isBusy = true;
+        ChangeAnimationState(PickupHash);
+
+        if (HasValidTarget())
         {
-            target = null;
+            target.InteractWithItem();
+            ClearTarget();
+        }
+
+        yield return new WaitForSeconds(0.5f);
+        isBusy = false;
+    }
+
+    private void ApplyAttack()
+    {
+        if (!HasValidTarget()) return;
+
+        Actor targetActor = target.myActor;
+
+        if (targetActor == null || targetActor.currentHealth <= 0)
+        {
+            ClearTarget();
             return;
         }
 
-        Instantiate(hitEffect, target.transform.position + new Vector3(0, 1, 0), Quaternion.identity);
-        target.GetComponent<Actor>().TakeDamage(attackDamage);
+        if (hitEffect != null)
+        {
+            Instantiate(hitEffect, target.transform.position + new Vector3(0f, 1f, 0f), Quaternion.identity);
+        }
+
+        targetActor.TakeDamage(attackDamage);
+
+        if (targetActor.currentHealth <= 0)
+        {
+            ClearTarget();
+        }
     }
 
-    private void ResetBusyState()
+    private void FaceCurrentDirection()
     {
-        playerBusy = false;
-        UpdateAnimationState();
-    }
+        if (isBusy) return;
 
-    private void FaceMovementDirection()
-    {
-        if (agent.velocity.sqrMagnitude <= movementTreshold) return;
+        if (agent.velocity.sqrMagnitude <= movementThreshold) return;
 
         Vector3 direction = agent.velocity.normalized;
         direction.y = 0f;
@@ -163,11 +217,55 @@ public class PlayerController : MonoBehaviour
         transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * lookRotationSpeed);
     }
 
+    private void FaceTarget(Vector3 targetPosition)
+    {
+        Vector3 direction = (targetPosition - transform.position).normalized;
+        direction.y = 0f;
+
+        if (direction.sqrMagnitude <= 0f) return;
+
+        Quaternion targetRotation = Quaternion.LookRotation(direction);
+        transform.rotation = targetRotation;
+    }
+
+    //private void SendAttack()
+    //{
+    //    if (target == null) return;
+
+    //    if (target.myActor.currentHealth <= 0)
+    //    {
+    //        target = null;
+    //        return;
+    //    }
+
+    //    Instantiate(hitEffect, target.transform.position + new Vector3(0, 1, 0), Quaternion.identity);
+    //    target.GetComponent<Actor>().TakeDamage(attackDamage);
+    //}
+
+    //private void ResetBusyState()
+    //{
+    //    isBusy = false;
+    //    UpdateAnimationState();
+    //}
+
+    //private void FaceMovementDirection()
+    //{
+    //    if (agent.velocity.sqrMagnitude <= movementThreshold) return;
+
+    //    Vector3 direction = agent.velocity.normalized;
+    //    direction.y = 0f;
+
+    //    if (direction.sqrMagnitude <= 0f) return;
+
+    //    Quaternion targetRotation = Quaternion.LookRotation(direction);
+    //    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * lookRotationSpeed);
+    //}
+
     private void UpdateAnimationState()
     {
-        if (playerBusy) return;
+        if (isBusy) return;
 
-        if (agent.velocity.sqrMagnitude <= movementTreshold)
+        if (agent.velocity.sqrMagnitude <= movementThreshold)
         {
             ChangeAnimationState(IdleHash);
         }
@@ -187,7 +285,7 @@ public class PlayerController : MonoBehaviour
 
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
-        ClickToMove();
+        HandleClick();
     }
 
     private void OnEnable()
