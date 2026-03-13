@@ -2,6 +2,9 @@ using UnityEngine;
 
 public class GroundItemVisual : MonoBehaviour
 {
+    [Header("References")]
+    [SerializeField] private Transform visualPivot;
+
     [Header("Rotation")]
     [SerializeField] private bool shouldRotate = true;
     [SerializeField] private Vector3 rotationAxis = Vector3.up;
@@ -12,27 +15,20 @@ public class GroundItemVisual : MonoBehaviour
     [SerializeField] private float oscillationHeight = 0.25f;
     [SerializeField] private float oscillationSpeed = 2f;
 
-    [Header("Item")]
-    [SerializeField] private Transform itemVisual;
-
     private Vector3 startLocalPosition;
 
     private void Awake()
     {
-        if (itemVisual == null)
-        {
-            itemVisual = transform.GetChild(0);
-        }
+        if (visualPivot == null && transform.childCount > 0)
+            visualPivot = transform.GetChild(0);
 
-        startLocalPosition = itemVisual.localPosition;
+        if (visualPivot != null)
+            startLocalPosition = visualPivot.localPosition;
     }
 
     private void Update()
     {
-        if (itemVisual == null)
-        {
-            return;
-        }
+        if (visualPivot == null) return;
 
         HandleRotation();
         HandleOscillation();
@@ -42,23 +38,19 @@ public class GroundItemVisual : MonoBehaviour
     {
         if (!shouldRotate) return;
 
-        itemVisual.Rotate(rotationAxis.normalized * rotationSpeed * Time.deltaTime, Space.Self);
+        visualPivot.Rotate(rotationAxis.normalized * rotationSpeed * Time.deltaTime, Space.Self);
     }
 
     private void HandleOscillation()
     {
         if (!shouldOscillate)
         {
-            itemVisual.localPosition = startLocalPosition;
+            visualPivot.localPosition = startLocalPosition;
             return;
         }
 
         float yOffset = (Mathf.Sin(Time.time * oscillationSpeed) + 1f) * 0.5f * oscillationHeight;
 
-        itemVisual.localPosition = new Vector3(
-            startLocalPosition.x,
-            startLocalPosition.y + yOffset,
-            startLocalPosition.z
-        );
+        visualPivot.localPosition = new Vector3(startLocalPosition.x, startLocalPosition.y + yOffset, startLocalPosition.z);
     }
 }
