@@ -811,6 +811,7 @@ GameObject:
   - component: {fileID: 1609474974}
   - component: {fileID: 1609474973}
   - component: {fileID: 1609474975}
+  - component: {fileID: 1609474976}
   m_Layer: 7
   m_Name: Item Pickup
   m_TagString: Interactable
@@ -868,6 +869,25 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Interactable
   interactionType: 1
+--- !u!114 &1609474976
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609474972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1c7ec2dff2620f645b18421b96d2220e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::GroundItemRotate
+  shouldRotate: 1
+  rotationAxis: {x: 0, y: 1, z: 0}
+  rotationSpeed: 90
+  shouldOscillate: 1
+  oscillationHeight: 0.25
+  oscillationSpeed: 2
+  itemVisual: {fileID: 8768146246546320239}
 --- !u!1 &2427322926558521
 GameObject:
   m_ObjectHideFlags: 0
@@ -6053,7 +6073,7 @@ Transform:
   m_GameObject: {fileID: 6574057742753492865}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: 0.022, z: 0}
+  m_LocalPosition: {x: -0.281, y: 0, z: 0}
   m_LocalScale: {x: 16.11, y: 16.11, z: 16.11}
   m_ConstrainProportionsScale: 1
   m_Children: []
