@@ -53,7 +53,7 @@ public class GroundItemVisual : MonoBehaviour
             return;
         }
 
-        float yOffset = Mathf.Sin(Time.time * oscillationSpeed) * oscillationHeight;
+        float yOffset = (Mathf.Sin(Time.time * oscillationSpeed) + 1f) * 0.5f * oscillationHeight;
 
         itemVisual.localPosition = new Vector3(
             startLocalPosition.x,
