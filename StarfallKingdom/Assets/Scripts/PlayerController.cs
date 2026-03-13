@@ -50,6 +50,8 @@ public class PlayerController : MonoBehaviour
 
     private void HandleClick()
     {
+        if (isBusy) return;
+
         if (mainCam == null || Mouse.current == null) return;
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();
@@ -160,6 +162,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator PickupRoutine()
     {
         isBusy = true;
+        agent.isStopped = true;
         animationController.TriggerPickup();
 
         if (HasValidTarget())
@@ -169,6 +172,8 @@ public class PlayerController : MonoBehaviour
         }
 
         yield return new WaitForSeconds(0.5f);
+        
+        agent.isStopped = false;
         isBusy = false;
     }
 
