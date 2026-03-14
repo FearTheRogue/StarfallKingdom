@@ -3,6 +3,7 @@ using UnityEngine.InputSystem;
 using UnityEngine.AI;
 using System.Collections;
 using System.Transactions;
+using Unity.VisualScripting;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(CharacterAnimationController))]
@@ -94,13 +95,21 @@ public class PlayerController : MonoBehaviour
     {
         target = null;
 
-        if (actionRoutine != null)
-        {
-            StopCoroutine(actionRoutine);
-            actionRoutine = null;
-        }
+        //if (actionRoutine != null)
+        //{
+        //    StopCoroutine(actionRoutine);
+        //    actionRoutine = null;
+        //}
 
+        //isBusy = false;
+    }
+
+    public void FinishPickupAction()
+    {
+        Debug.Log("Animation just finished");
+        agent.isStopped = false;
         isBusy = false;
+        actionRoutine = null;
     }
 
     private void StartActionRoutine(IEnumerator routine)
@@ -171,10 +180,7 @@ public class PlayerController : MonoBehaviour
             ClearTarget();
         }
 
-        yield return new WaitForSeconds(0.5f);
-        
-        agent.isStopped = false;
-        isBusy = false;
+        yield break;
     }
 
     private void ApplyAttack()
