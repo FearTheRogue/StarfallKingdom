@@ -275,6 +275,7 @@ MonoBehaviour:
   lookOffset: {x: 0, y: 1.5, z: 0}
   rotationSpeed: 1
   zoomSpeed: 1.5
+  zoomSmoothSpeed: 8
   minDistance: 3
   maxDistance: 12
   minHeight: 2
@@ -517,6 +518,12 @@ MonoBehaviour:
   attackDistance: 1.5
   attackDamage: 25
   hitEffect: {fileID: 4995752487602272407, guid: 75a4b1bfdd1cb6246b49a5acff703ab2, type: 3}
+  groundLayers:
+    serializedVersion: 2
+    m_Bits: 64
+  clickEffectHeightOffset: 0.05
+  targetEffect: {fileID: 0}
+  targetEffectHeightOffset: 1
 --- !u!195 &644656598
 NavMeshAgent:
   m_ObjectHideFlags: 0

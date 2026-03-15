@@ -2,8 +2,6 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
 using System.Collections;
-using System.Transactions;
-using Unity.VisualScripting;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(CharacterAnimationController))]
@@ -22,6 +20,12 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float attackDistance = 1.5f;
     [SerializeField] private int attackDamage = 1;
     [SerializeField] private ParticleSystem hitEffect;
+
+
+    [SerializeField] private LayerMask groundLayers;
+    [SerializeField] private float clickEffectHeightOffset = 0.1f;
+    [SerializeField] private ParticleSystem targetEffect;
+    [SerializeField] private float targetEffectHeightOffset = 1f;
 
     private CustomActions input;
     private NavMeshAgent agent;
@@ -51,9 +55,7 @@ public class PlayerController : MonoBehaviour
 
     private void HandleClick()
     {
-        if (isBusy) return;
-
-        if (mainCam == null || Mouse.current == null) return;
+        if (isBusy || mainCam == null || Mouse.current == null) return;
 
         Vector2 mousePosition = Mouse.current.position.ReadValue();
         Ray ray = mainCam.ScreenPointToRay(mousePosition);
@@ -63,27 +65,59 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        SpawnClickEffect(hit.point);
+        Vector3 groundEffectPosition = GetGroundEffectPosition(ray, hit);
 
         if (hit.transform.CompareTag("Interactable"))
         {
             if (hit.transform.TryGetComponent(out Interactable interactable))
             {
-                target = hit.transform.GetComponent<Interactable>();
+                target = interactable;
+
+                SpawnClickEffect(groundEffectPosition);
+
+                if (interactable.interactionType == InteractionTypes.Enemy)
+                {
+                    SpawnTargetEffect(interactable.transform);
+                }
+
                 return;
             }
         }
 
         ClearTarget();
         agent.SetDestination(hit.point);
+        SpawnClickEffect(groundEffectPosition);
+    }
+
+    private Vector3 GetGroundEffectPosition(Ray ray, RaycastHit originalHit)
+    {
+        if (Physics.Raycast(ray, out RaycastHit groundHit, maxClickDistance, groundLayers))
+        {
+            return groundHit.point;
+        }
+
+        if (NavMesh.SamplePosition(originalHit.point, out NavMeshHit navHit, 2f, NavMesh.AllAreas))
+        {
+            return navHit.position;
+        }
+
+        return originalHit.point;
     }
 
     private void SpawnClickEffect(Vector3 position)
     {
         if (clickEffect == null) return;
 
-        Vector3 spawnPosition = position + new Vector3(0f, 0.1f, 0f);
+        Vector3 spawnPosition = position + Vector3.up * clickEffectHeightOffset;
         Instantiate(clickEffect, spawnPosition, clickEffect.transform.rotation);
+    }
+
+    private void SpawnTargetEffect(Transform targetTransform)
+    {
+        if (targetEffect == null || targetTransform == null) return;
+
+        Vector3 spawnPosition = targetTransform.position + Vector3.up * targetEffectHeightOffset;
+        Instantiate(targetEffect, spawnPosition, targetEffect.transform.rotation);
     }
 
     private bool HasValidTarget()
