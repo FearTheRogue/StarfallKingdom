@@ -270,8 +270,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::CameraController
   target: {fileID: 543450652162388707}
-  smoothSpeed: 8
-  offset: {x: 0, y: 4, z: -5}
+  distance: 6
+  height: 4
+  lookOffset: {x: 0, y: 1.5, z: 0}
+  rotationSpeed: 100
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0

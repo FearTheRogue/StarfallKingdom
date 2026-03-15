@@ -7,8 +7,9 @@ public class CameraController : MonoBehaviour
     [SerializeField] private Transform target;
 
     [Header("Follow")]
-    [SerializeField] private float smoothSpeed = 8f;
-    [SerializeField] private Vector3 offset = new Vector3(0f, 6f, -6f);
+    [SerializeField] private float distance = 6f;
+    [SerializeField] private float height = 6f;
+    [SerializeField] private Vector3 lookOffset = new Vector3(0f, 1.5f, 0f);
 
     [Header("Rotation")]
     [SerializeField] private float rotationSpeed = 120f;
@@ -33,18 +34,16 @@ public class CameraController : MonoBehaviour
         if (Mouse.current == null || !Mouse.current.middleButton.isPressed) return;
 
         float mouseX = Mouse.current.delta.ReadValue().x;
-        yaw += mouseX * rotationSpeed * Time.deltaTime;
+        yaw += mouseX * rotationSpeed;
     }
 
     private void FollowTarget()
     {
         Quaternion rotation = Quaternion.Euler(0f, yaw, 0f);
-        Vector3 rotatedOffset = rotation * offset;
+        Vector3 orbitOffset = rotation * Vector3.back * distance;
+        Vector3 desiredPosition = target.position + orbitOffset + Vector3.up * height;
 
-        Vector3 desiredPosition = target.position + rotatedOffset;
-        Vector3 smoothedPosition = Vector3.Lerp(transform.position, desiredPosition, smoothSpeed * Time.deltaTime);
-        
-        transform.position = smoothedPosition;
-        transform.LookAt(target.position);
+        transform.position = desiredPosition;
+        transform.LookAt(target.position + lookOffset);
     }
 }
