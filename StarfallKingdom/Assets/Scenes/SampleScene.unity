@@ -273,7 +273,7 @@ MonoBehaviour:
   distance: 6
   height: 4
   lookOffset: {x: 0, y: 1.5, z: 0}
-  rotationSpeed: 100
+  rotationSpeed: 1
 --- !u!1 &410087039
 GameObject:
   m_ObjectHideFlags: 0
@@ -531,7 +531,7 @@ NavMeshAgent:
   m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: -0.17
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &644656600
@@ -773,7 +773,7 @@ NavMeshAgent:
   m_AutoBraking: 0
   m_AutoRepath: 1
   m_Height: 2
-  m_BaseOffset: 0
+  m_BaseOffset: -0.085
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
 --- !u!114 &1025662871
