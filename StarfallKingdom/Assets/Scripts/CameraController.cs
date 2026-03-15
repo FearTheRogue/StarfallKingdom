@@ -1,3 +1,4 @@
+using System.Net.Mime;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -16,6 +17,7 @@ public class CameraController : MonoBehaviour
 
     [Header("Zoom")]
     [SerializeField] private float zoomSpeed = 0.02f;
+    [SerializeField] private float zoomSmoothSpeed = 8f;
     [SerializeField] private float minDistance = 3f;
     [SerializeField] private float maxDistance = 12f;
     [SerializeField] private float minHeight = 3f;
@@ -23,9 +25,15 @@ public class CameraController : MonoBehaviour
 
     private float yaw;
 
+    private float targetDistance;
+    private float targetHeight;
+
     private void Start()
     {
         yaw = transform.eulerAngles.y;
+
+        targetDistance = distance;
+        targetHeight = height;
     }
 
     private void LateUpdate()
@@ -34,6 +42,7 @@ public class CameraController : MonoBehaviour
 
         HandleRotation();
         HandleZoom();
+        SmoothZoom();
         FollowTarget();
     }
 
@@ -51,11 +60,17 @@ public class CameraController : MonoBehaviour
 
         if (Mathf.Approximately(scrollWheel, 0f)) return;
 
-        distance -= scrollWheel * zoomSpeed;
-        height -= scrollWheel * zoomSpeed;
+        targetDistance -= scrollWheel * zoomSpeed;
+        targetHeight -= scrollWheel * zoomSpeed;
 
-        distance = Mathf.Clamp(distance, minDistance, maxDistance);
-        height = Mathf.Clamp(height, minHeight, maxHeight);
+        targetDistance = Mathf.Clamp(targetDistance, minDistance, maxDistance);
+        targetHeight = Mathf.Clamp(targetHeight, minHeight, maxHeight);
+    }
+
+    private void SmoothZoom()
+    {
+        distance = Mathf.Lerp(distance, targetDistance, zoomSmoothSpeed * Time.deltaTime);
+        height = Mathf.Lerp(height, targetHeight, zoomSmoothSpeed * Time.deltaTime);
     }
 
     private void FollowTarget()
