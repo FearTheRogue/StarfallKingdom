@@ -2,39 +2,45 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
 using System.Collections;
+using System;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(CharacterAnimationController))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Movement")]
+    [Header("References")]
     [SerializeField] private ParticleSystem clickEffect;
+    [SerializeField] private ParticleSystem targetEffect;
+    [SerializeField] private ParticleSystem hitEffect;
+
+    [Header("Click Detection")]
     [SerializeField] private LayerMask clickableLayers;
+    [SerializeField] private LayerMask groundLayers;
     [SerializeField] private float maxClickDistance = 100f;
+
+    [Header("Movement")]
     [SerializeField] private float lookRotationSpeed = 8f;
     [SerializeField] private float movementThreshold = 0.01f;
 
-    [Header("Attack")]
+    [Header("Effect Offsets")]
+    [SerializeField] private float clickEffectHeightOffset = 0.1f;
+    [SerializeField] private float targetEffectHeightOffset = 1f;
+    [SerializeField] private float hitEffectHeightOffset = 1f;
+
+    [Header("Combat")]
     [SerializeField] private float attackSpeed = 1.5f;
     [SerializeField] private float attackDelay = 0.3f;
-    [SerializeField] private float attackDistance = 1.5f;
+    [SerializeField] private float interactionDistance = 1.5f;
     [SerializeField] private int attackDamage = 1;
-    [SerializeField] private ParticleSystem hitEffect;
-
-
-    [SerializeField] private LayerMask groundLayers;
-    [SerializeField] private float clickEffectHeightOffset = 0.1f;
-    [SerializeField] private ParticleSystem targetEffect;
-    [SerializeField] private float targetEffectHeightOffset = 1f;
 
     private CustomActions input;
     private NavMeshAgent agent;
     private CharacterAnimationController animationController;
     private Camera mainCam;
 
-    private Interactable target;
-    private Coroutine actionRoutine;
-    private bool isBusy = false;
+    private Interactable currentTarget;
+    private Coroutine currentActionRoutine;
+    private bool isBusy;
 
     private void Awake()
     {
@@ -46,11 +52,31 @@ public class PlayerController : MonoBehaviour
         input.Main.Move.performed += OnMovePerformed;
     }
 
+    private void OnEnable()
+    {
+        input.Enable();
+    }
+
+    private void OnDisable()
+    {
+        input.Disable();
+    }
+
+    private void OnDestroy()
+    {
+        input.Main.Move.performed -= OnMovePerformed;
+    }
+
     private void Update()
     {
-        UpdateTargetMovement();
-        FaceCurrentDirection();
+        HandleTargetMovement();
+        HandleFacing();
         UpdateAnimations();
+    }
+
+    private void OnMovePerformed(InputAction.CallbackContext context)
+    {
+        HandleClick();
     }
 
     private void HandleClick()
@@ -66,27 +92,38 @@ public class PlayerController : MonoBehaviour
         }
 
         Vector3 groundEffectPosition = GetGroundEffectPosition(ray, hit);
+        SpawnClickEffect(groundEffectPosition);
 
-        if (hit.transform.CompareTag("Interactable"))
+        if (TrySetInteractableTarget(hit))
         {
-            if (hit.transform.TryGetComponent(out Interactable interactable))
-            {
-                target = interactable;
-
-                SpawnClickEffect(groundEffectPosition);
-
-                if (interactable.interactionType == InteractionTypes.Enemy)
-                {
-                    SpawnTargetEffect(interactable.transform);
-                }
-
-                return;
-            }
+            return;
         }
+
 
         ClearTarget();
         agent.SetDestination(hit.point);
-        SpawnClickEffect(groundEffectPosition);
+    }
+
+    private bool TrySetInteractableTarget(RaycastHit hit)
+    {
+        if (!hit.transform.CompareTag("Interactable"))
+        {
+            return false;
+        }
+
+        if (!hit.transform.TryGetComponent(out Interactable interactable))
+        {
+            return false;
+        }
+
+        currentTarget = interactable;
+
+        if (interactable.interactionType == InteractionTypes.Enemy)
+        {
+            SpawnTargetEffect(interactable.transform);
+        }
+
+        return true;
     }
 
     private Vector3 GetGroundEffectPosition(Ray ray, RaycastHit originalHit)
@@ -104,82 +141,32 @@ public class PlayerController : MonoBehaviour
         return originalHit.point;
     }
 
-    private void SpawnClickEffect(Vector3 position)
-    {
-        if (clickEffect == null) return;
-
-        Vector3 spawnPosition = position + Vector3.up * clickEffectHeightOffset;
-        Instantiate(clickEffect, spawnPosition, clickEffect.transform.rotation);
-    }
-
-    private void SpawnTargetEffect(Transform targetTransform)
-    {
-        if (targetEffect == null || targetTransform == null) return;
-
-        Vector3 spawnPosition = targetTransform.position + Vector3.up * targetEffectHeightOffset;
-        Instantiate(targetEffect, spawnPosition, targetEffect.transform.rotation);
-    }
-
-    private bool HasValidTarget()
-    {
-        return target != null && target.gameObject != null;
-    }
-
-    private void ClearTarget()
-    {
-        target = null;
-
-        //if (actionRoutine != null)
-        //{
-        //    StopCoroutine(actionRoutine);
-        //    actionRoutine = null;
-        //}
-
-        //isBusy = false;
-    }
-
-    public void FinishPickupAction()
-    {
-        Debug.Log("Animation just finished");
-        agent.isStopped = false;
-        isBusy = false;
-        actionRoutine = null;
-    }
-
-    private void StartActionRoutine(IEnumerator routine)
-    {
-        if (actionRoutine != null)
-        {
-            StopCoroutine(actionRoutine);
-        }
-
-        actionRoutine = StartCoroutine(routine);
-    }
-
-    private void UpdateTargetMovement()
+    private void HandleTargetMovement()
     {
         if (!HasValidTarget()) return;
 
-        float distanceToTarget = Vector3.Distance(transform.position, target.transform.position);
+        float distanceToTarget = Vector3.Distance(transform.position, currentTarget.transform.position);
 
-        if (distanceToTarget <= attackDistance)
+        if (distanceToTarget <= interactionDistance)
         {
             TryInteractWithTarget();
+            return;
         }
-        else if (!isBusy)
+        
+        if (!isBusy)
         {
-            agent.SetDestination(target.transform.position);
+            agent.SetDestination(currentTarget.transform.position);
         }
     }
-
+    
     private void TryInteractWithTarget()
     {
         if (isBusy || !HasValidTarget()) return;
 
         agent.SetDestination(transform.position);
-        FaceTarget(target.transform.position);
+        FaceTarget(currentTarget.transform.position);
 
-        switch (target.interactionType)
+        switch (currentTarget.interactionType)
         {
             case InteractionTypes.Enemy:
                 StartActionRoutine(AttackRoutine());
@@ -200,6 +187,7 @@ public class PlayerController : MonoBehaviour
 
         yield return new WaitForSeconds(Mathf.Max(0f, attackSpeed - attackDelay));
         isBusy = false;
+        currentActionRoutine = null;
     }
 
     private IEnumerator PickupRoutine()
@@ -210,18 +198,26 @@ public class PlayerController : MonoBehaviour
 
         if (HasValidTarget())
         {
-            target.InteractWithItem();
+            currentTarget.InteractWithItem();
             ClearTarget();
         }
 
         yield break;
     }
 
+    public void FinishPickupAction()
+    {
+        Debug.Log("Animation just finished");
+        agent.isStopped = false;
+        isBusy = false;
+        currentActionRoutine = null;
+    }
+
     private void ApplyAttack()
     {
         if (!HasValidTarget()) return;
 
-        Actor targetActor = target.myActor;
+        Actor targetActor = currentTarget.myActor;
 
         if (targetActor == null || targetActor.currentHealth <= 0)
         {
@@ -229,24 +225,26 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        if (hitEffect != null)
-        {
-            Instantiate(hitEffect, target.transform.position + new Vector3(0f, 1f, 0f), Quaternion.identity);
-        }
-
+        SpawnHitEffect(currentTarget.transform.position);
         targetActor.TakeDamage(attackDamage);
 
         if (targetActor.currentHealth <= 0)
         {
             ClearTarget();
         }
+
+        if (hitEffect != null)
+        {
+            Instantiate(hitEffect, currentTarget.transform.position + new Vector3(0f, 1f, 0f), Quaternion.identity);
+        }
+
+        targetActor.TakeDamage(attackDamage);
+
     }
 
-    private void FaceCurrentDirection()
+    private void HandleFacing()
     {
-        if (isBusy) return;
-
-        if (agent.velocity.sqrMagnitude <= movementThreshold) return;
+        if (isBusy || agent.velocity.sqrMagnitude <= movementThreshold) return;
 
         Vector3 direction = agent.velocity.normalized;
         direction.y = 0f;
@@ -264,8 +262,7 @@ public class PlayerController : MonoBehaviour
 
         if (direction.sqrMagnitude <= 0f) return;
 
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = targetRotation;
+        transform.rotation = Quaternion.LookRotation(direction);
     }
 
     private void UpdateAnimations()
@@ -279,23 +276,47 @@ public class PlayerController : MonoBehaviour
         animationController.SetMoveSpeed(agent.velocity.magnitude);
     }
 
-    private void OnMovePerformed(InputAction.CallbackContext context)
+    private bool HasValidTarget()
     {
-        HandleClick();
+        return currentTarget != null && currentTarget.gameObject != null;
     }
 
-    private void OnEnable()
+    private void ClearTarget()
     {
-        input.Enable();
+        currentTarget = null;
     }
 
-    private void OnDisable()
+    private void StartActionRoutine(IEnumerator routine)
     {
-        input.Disable();
+        if (currentActionRoutine != null)
+        {
+            StopCoroutine(currentActionRoutine);
+        }
+
+        currentActionRoutine = StartCoroutine(routine);
     }
 
-    private void OnDestroy()
+    private void SpawnClickEffect(Vector3 position)
     {
-        input.Main.Move.performed -= OnMovePerformed;
+        SpawnEffect(clickEffect, position + Vector3.up * clickEffectHeightOffset);
+    }
+
+    private void SpawnTargetEffect(Transform targetTransform)
+    {
+        if (targetTransform == null) return;
+
+        SpawnEffect(targetEffect, targetTransform.position + Vector3.up * targetEffectHeightOffset);
+    }
+
+    private void SpawnHitEffect(Vector3 position)
+    {
+        SpawnEffect(hitEffect, position + Vector3.up * hitEffectHeightOffset);
+    }
+
+    private void SpawnEffect(ParticleSystem effect, Vector3 position)
+    {
+        if (effect == null) return;
+
+        Instantiate(effect, position, effect.transform.rotation);
     }
 }
