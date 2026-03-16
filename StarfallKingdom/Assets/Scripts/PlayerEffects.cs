@@ -19,14 +19,34 @@ public class PlayerEffects : MonoBehaviour
     [Header("Ground Sampling")]
     [SerializeField] private float navMeshSampleRadius = 2f;
 
-    public Vector3 GetGroundEffectPosition(Ray ray, RaycastHit originalHit, float maxClickDistance)
+    public void SpawnGroundClickEffect(Ray ray, RaycastHit originalHit, float maxClickDistance)
+    {
+        Vector3 groundEffectPosition = GetGroundEffectPosition(ray, originalHit, maxClickDistance);
+        SpawnClickEffect(groundEffectPosition);
+    }
+
+    public void SpawnTargetEffect(Transform targetTransform)
+    {
+        if (targetTransform == null) return;
+
+        Vector3 spawnPosition = targetTransform.position + Vector3.up * targetEffectHeightOffset;
+        SpawnEffect(targetEffect, spawnPosition);
+    }
+
+    public void SpawnHitEffect(Vector3 worldPosition)
+    {
+        Vector3 spawnPosition = worldPosition + Vector3.up * hitEffectHeightOffset;
+        SpawnEffect(hitEffect, spawnPosition);
+    }
+
+    private Vector3 GetGroundEffectPosition(Ray ray, RaycastHit originalHit, float maxClickDistance)
     {
         if (Physics.Raycast(ray, out RaycastHit groundHit, maxClickDistance, groundLayers))
         {
             return groundHit.point;
         }
 
-        if (NavMesh.SamplePosition(originalHit.point, out NavMeshHit navHit, 2f, NavMesh.AllAreas))
+        if (NavMesh.SamplePosition(originalHit.point, out NavMeshHit navHit, navMeshSampleRadius, NavMesh.AllAreas))
         {
             return navHit.position;
         }
@@ -34,27 +54,16 @@ public class PlayerEffects : MonoBehaviour
         return originalHit.point;
     }
 
-    public void SpawnClickEffect(Vector3 position)
+    private void SpawnClickEffect(Vector3 worldPosition)
     {
-        SpawnEffect(clickEffect, position + Vector3.up * clickEffectHeightOffset);
+        Vector3 spawnPosition = worldPosition + Vector3.up * clickEffectHeightOffset;
+        SpawnEffect(clickEffect, spawnPosition);
     }
 
-    public void SpawnTargetEffect(Transform targetTransform)
-    {
-        if (targetTransform == null) return;
-
-        SpawnEffect(targetEffect, targetTransform.position + Vector3.up * targetEffectHeightOffset);
-    }
-
-    public void SpawnHitEffect(Vector3 position)
-    {
-        SpawnEffect(hitEffect, position + Vector3.up * hitEffectHeightOffset);
-    }
-
-    private void SpawnEffect(ParticleSystem effect, Vector3 position)
+    private void SpawnEffect(ParticleSystem effect, Vector3 worldPosition)
     {
         if (effect == null) return;
 
-        Instantiate(effect, position, effect.transform.rotation);
+        Instantiate(effect, worldPosition, effect.transform.rotation);
     }
 }

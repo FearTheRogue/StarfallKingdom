@@ -3,19 +3,12 @@ using UnityEngine.InputSystem;
 using UnityEngine.AI;
 using System.Collections;
 
+
 [RequireComponent (typeof(PlayerMovement))]
 [RequireComponent(typeof(PlayerEffects))]
 [RequireComponent(typeof(CharacterAnimationController))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("Click Detection")]
-    [SerializeField] private LayerMask clickableLayers;
-    [SerializeField] private float maxClickDistance = 100f;
-
-    [Header("Movement")]
-    [SerializeField] private float lookRotationSpeed = 8f;
-    [SerializeField] private float movementThreshold = 0.01f;
-
     [Header("Combat")]
     [SerializeField] private float attackSpeed = 1.5f;
     [SerializeField] private float attackDelay = 0.3f;
@@ -23,26 +16,29 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private int attackDamage = 1;
 
     private CustomActions input;
-    private NavMeshAgent agent;
     private CharacterAnimationController animationController;
-    private Camera mainCam;
+    private PlayerEffects effects;
+    private PlayerMovement movement;
 
     private Interactable currentTarget;
     private Coroutine currentActionRoutine;
     private bool isBusy;
 
-    private PlayerEffects effects;
-
     private void Awake()
     {
-        effects = GetComponent<PlayerEffects>();
-
-        agent = GetComponent<NavMeshAgent>();
         animationController = GetComponent<CharacterAnimationController>();
-        mainCam = Camera.main;
+        effects = GetComponent<PlayerEffects>();
+        movement = GetComponent<PlayerMovement>();
 
         input = new CustomActions();
         input.Main.Move.performed += OnMovePerformed;
+    }
+
+    private void Update()
+    {
+        HandleTargetMovement();
+        movement.FaceMovementDirection(isBusy);
+        UpdateAnimations();
     }
 
     private void OnEnable()
@@ -60,13 +56,6 @@ public class PlayerController : MonoBehaviour
         input.Main.Move.performed -= OnMovePerformed;
     }
 
-    private void Update()
-    {
-        HandleTargetMovement();
-        HandleFacing();
-        UpdateAnimations();
-    }
-
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
         HandleClick();
@@ -74,54 +63,26 @@ public class PlayerController : MonoBehaviour
 
     private void HandleClick()
     {
-        if (isBusy || mainCam == null || Mouse.current == null) return;
-
-        Vector2 mousePosition = Mouse.current.position.ReadValue();
-        Ray ray = mainCam.ScreenPointToRay(mousePosition);
-
-        if (!Physics.Raycast(ray, out RaycastHit hit, maxClickDistance, clickableLayers))
+        if (!movement.TryHandleClick(isBusy, out Interactable interactable))
         {
             return;
         }
 
-        Vector3 groundEffectPosition = effects.GetGroundEffectPosition(ray, hit, maxClickDistance);
-        effects.SpawnClickEffect(groundEffectPosition);
-
-        if (TrySetInteractableTarget(hit))
+        if (interactable != null)
         {
+            currentTarget = interactable;
             return;
         }
-
 
         ClearTarget();
-        agent.SetDestination(hit.point);
-    }
-
-    private bool TrySetInteractableTarget(RaycastHit hit)
-    {
-        if (!hit.transform.CompareTag("Interactable"))
-        {
-            return false;
-        }
-
-        if (!hit.transform.TryGetComponent(out Interactable interactable))
-        {
-            return false;
-        }
-
-        currentTarget = interactable;
-
-        if (interactable.interactionType == InteractionTypes.Enemy)
-        {
-            effects.SpawnTargetEffect(interactable.transform);
-        }
-
-        return true;
     }
 
     private void HandleTargetMovement()
     {
-        if (!HasValidTarget()) return;
+        if (!HasValidTarget())
+        {
+            return;
+        }
 
         float distanceToTarget = Vector3.Distance(transform.position, currentTarget.transform.position);
 
@@ -130,25 +91,29 @@ public class PlayerController : MonoBehaviour
             TryInteractWithTarget();
             return;
         }
-        
+
         if (!isBusy)
         {
-            agent.SetDestination(currentTarget.transform.position);
+            movement.MoveTo(currentTarget.transform.position);
         }
     }
-    
+
     private void TryInteractWithTarget()
     {
-        if (isBusy || !HasValidTarget()) return;
+        if (isBusy || !HasValidTarget())
+        {
+            return;
+        }
 
-        agent.SetDestination(transform.position);
-        FaceTarget(currentTarget.transform.position);
+        movement.Stop();
+        movement.FaceTarget(currentTarget.transform.position);
 
         switch (currentTarget.interactionType)
         {
             case InteractionTypes.Enemy:
                 StartActionRoutine(AttackRoutine());
                 break;
+
             case InteractionTypes.Item:
                 StartActionRoutine(PickupRoutine());
                 break;
@@ -164,6 +129,7 @@ public class PlayerController : MonoBehaviour
         ApplyAttack();
 
         yield return new WaitForSeconds(Mathf.Max(0f, attackSpeed - attackDelay));
+
         isBusy = false;
         currentActionRoutine = null;
     }
@@ -171,7 +137,7 @@ public class PlayerController : MonoBehaviour
     private IEnumerator PickupRoutine()
     {
         isBusy = true;
-        agent.isStopped = true;
+        movement.SetStopped(true);
         animationController.TriggerPickup();
 
         if (HasValidTarget())
@@ -185,15 +151,17 @@ public class PlayerController : MonoBehaviour
 
     public void FinishPickupAction()
     {
-        Debug.Log("Animation just finished");
-        agent.isStopped = false;
+        movement.SetStopped(false);
         isBusy = false;
         currentActionRoutine = null;
     }
 
     private void ApplyAttack()
     {
-        if (!HasValidTarget()) return;
+        if (!HasValidTarget())
+        {
+            return;
+        }
 
         Actor targetActor = currentTarget.myActor;
 
@@ -212,29 +180,6 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandleFacing()
-    {
-        if (isBusy || agent.velocity.sqrMagnitude <= movementThreshold) return;
-
-        Vector3 direction = agent.velocity.normalized;
-        direction.y = 0f;
-
-        if (direction.sqrMagnitude <= 0f) return;
-
-        Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * lookRotationSpeed);
-    }
-
-    private void FaceTarget(Vector3 targetPosition)
-    {
-        Vector3 direction = (targetPosition - transform.position).normalized;
-        direction.y = 0f;
-
-        if (direction.sqrMagnitude <= 0f) return;
-
-        transform.rotation = Quaternion.LookRotation(direction);
-    }
-
     private void UpdateAnimations()
     {
         if (isBusy)
@@ -243,7 +188,7 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        animationController.SetMoveSpeed(agent.velocity.magnitude);
+        animationController.SetMoveSpeed(movement.CurrentSpeed);
     }
 
     private bool HasValidTarget()

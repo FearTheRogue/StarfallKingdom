@@ -506,12 +506,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 899958e60bc39eb439ce87f56aba5d04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
-  clickableLayers:
-    serializedVersion: 2
-    m_Bits: 192
-  maxClickDistance: 100
-  lookRotationSpeed: 8
-  movementThreshold: 0.01
   attackSpeed: 1.5
   attackDelay: 0.3
   interactionDistance: 1.5
@@ -1752,8 +1746,8 @@ GameObject:
   - component: {fileID: 644656600}
   - component: {fileID: 644656597}
   - component: {fileID: 919132148444145755}
-  - component: {fileID: 919132148444145754}
   - component: {fileID: 919132148444145756}
+  - component: {fileID: 919132148444145754}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -1790,7 +1784,7 @@ MonoBehaviour:
   hitEffect: {fileID: 4995752487602272407, guid: 75a4b1bfdd1cb6246b49a5acff703ab2, type: 3}
   groundLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   clickEffectHeightOffset: 0.05
   targetEffectHeightOffset: 1
   hitEffectHeightOffset: 1
@@ -1807,15 +1801,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 150f3e82602df9941a3870312a313130, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerMovement
-  lookRotationSpeed: 8
-  movementThreshold: 0.01
   clickableLayers:
     serializedVersion: 2
-    m_Bits: 0
-  groundLayers:
-    serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 192
   maxClickDistance: 100
+  lookRotationSpeed: 8
+  movementThreshold: 0.01
 --- !u!1 &919132148973134528
 GameObject:
   m_ObjectHideFlags: 0
