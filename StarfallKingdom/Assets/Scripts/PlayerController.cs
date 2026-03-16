@@ -2,30 +2,19 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.AI;
 using System.Collections;
-using System;
 
-[RequireComponent(typeof(NavMeshAgent))]
+[RequireComponent (typeof(PlayerMovement))]
+[RequireComponent(typeof(PlayerEffects))]
 [RequireComponent(typeof(CharacterAnimationController))]
 public class PlayerController : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private ParticleSystem clickEffect;
-    [SerializeField] private ParticleSystem targetEffect;
-    [SerializeField] private ParticleSystem hitEffect;
-
     [Header("Click Detection")]
     [SerializeField] private LayerMask clickableLayers;
-    [SerializeField] private LayerMask groundLayers;
     [SerializeField] private float maxClickDistance = 100f;
 
     [Header("Movement")]
     [SerializeField] private float lookRotationSpeed = 8f;
     [SerializeField] private float movementThreshold = 0.01f;
-
-    [Header("Effect Offsets")]
-    [SerializeField] private float clickEffectHeightOffset = 0.1f;
-    [SerializeField] private float targetEffectHeightOffset = 1f;
-    [SerializeField] private float hitEffectHeightOffset = 1f;
 
     [Header("Combat")]
     [SerializeField] private float attackSpeed = 1.5f;
@@ -42,8 +31,12 @@ public class PlayerController : MonoBehaviour
     private Coroutine currentActionRoutine;
     private bool isBusy;
 
+    private PlayerEffects effects;
+
     private void Awake()
     {
+        effects = GetComponent<PlayerEffects>();
+
         agent = GetComponent<NavMeshAgent>();
         animationController = GetComponent<CharacterAnimationController>();
         mainCam = Camera.main;
@@ -91,8 +84,8 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        Vector3 groundEffectPosition = GetGroundEffectPosition(ray, hit);
-        SpawnClickEffect(groundEffectPosition);
+        Vector3 groundEffectPosition = effects.GetGroundEffectPosition(ray, hit, maxClickDistance);
+        effects.SpawnClickEffect(groundEffectPosition);
 
         if (TrySetInteractableTarget(hit))
         {
@@ -120,25 +113,10 @@ public class PlayerController : MonoBehaviour
 
         if (interactable.interactionType == InteractionTypes.Enemy)
         {
-            SpawnTargetEffect(interactable.transform);
+            effects.SpawnTargetEffect(interactable.transform);
         }
 
         return true;
-    }
-
-    private Vector3 GetGroundEffectPosition(Ray ray, RaycastHit originalHit)
-    {
-        if (Physics.Raycast(ray, out RaycastHit groundHit, maxClickDistance, groundLayers))
-        {
-            return groundHit.point;
-        }
-
-        if (NavMesh.SamplePosition(originalHit.point, out NavMeshHit navHit, 2f, NavMesh.AllAreas))
-        {
-            return navHit.position;
-        }
-
-        return originalHit.point;
     }
 
     private void HandleTargetMovement()
@@ -225,21 +203,13 @@ public class PlayerController : MonoBehaviour
             return;
         }
 
-        SpawnHitEffect(currentTarget.transform.position);
+        effects.SpawnHitEffect(currentTarget.transform.position);
         targetActor.TakeDamage(attackDamage);
 
         if (targetActor.currentHealth <= 0)
         {
             ClearTarget();
         }
-
-        if (hitEffect != null)
-        {
-            Instantiate(hitEffect, currentTarget.transform.position + new Vector3(0f, 1f, 0f), Quaternion.identity);
-        }
-
-        targetActor.TakeDamage(attackDamage);
-
     }
 
     private void HandleFacing()
@@ -294,29 +264,5 @@ public class PlayerController : MonoBehaviour
         }
 
         currentActionRoutine = StartCoroutine(routine);
-    }
-
-    private void SpawnClickEffect(Vector3 position)
-    {
-        SpawnEffect(clickEffect, position + Vector3.up * clickEffectHeightOffset);
-    }
-
-    private void SpawnTargetEffect(Transform targetTransform)
-    {
-        if (targetTransform == null) return;
-
-        SpawnEffect(targetEffect, targetTransform.position + Vector3.up * targetEffectHeightOffset);
-    }
-
-    private void SpawnHitEffect(Vector3 position)
-    {
-        SpawnEffect(hitEffect, position + Vector3.up * hitEffectHeightOffset);
-    }
-
-    private void SpawnEffect(ParticleSystem effect, Vector3 position)
-    {
-        if (effect == null) return;
-
-        Instantiate(effect, position, effect.transform.rotation);
     }
 }
