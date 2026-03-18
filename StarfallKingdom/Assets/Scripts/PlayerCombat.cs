@@ -35,6 +35,7 @@ public class PlayerCombat : MonoBehaviour
         if (interactable != null)
         {
             currentTarget = interactable;
+            effects.ShowTargetIndicator(interactable.transform);
             return;
         }
 
@@ -146,6 +147,7 @@ public class PlayerCombat : MonoBehaviour
     private void ClearTarget()
     {
         currentTarget = null;
+        effects.HideTargetIndicator();
     }
 
     private void StartActionRoutine(IEnumerator routine)

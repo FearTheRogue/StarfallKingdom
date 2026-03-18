@@ -1,3 +1,5 @@
+using System;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -7,6 +9,10 @@ public class PlayerEffects : MonoBehaviour
     [SerializeField] private ParticleSystem clickEffect;
     [SerializeField] private ParticleSystem targetEffect;
     [SerializeField] private ParticleSystem hitEffect;
+
+    [Header("Target Indicator")]
+    [SerializeField] private GameObject targetIndicatorPrefab;
+    [SerializeField] private Vector3 targetIndicatorOffset = new Vector3(0f, 0.05f, 0f);
 
     [Header("Layers")]
     [SerializeField] private LayerMask groundLayers;
@@ -19,10 +25,41 @@ public class PlayerEffects : MonoBehaviour
     [Header("Ground Sampling")]
     [SerializeField] private float navMeshSampleRadius = 2f;
 
+    private GameObject activeTargetIndicator;
+    private Transform activeTarget;
+
+    private void LateUpdate()
+    {
+        if (activeTargetIndicator == null || activeTarget == null) return;
+
+        activeTargetIndicator.transform.position = activeTarget.position + targetIndicatorOffset;
+    }
+
     public void SpawnGroundClickEffect(Ray ray, RaycastHit originalHit, float maxClickDistance)
     {
         Vector3 groundEffectPosition = GetGroundEffectPosition(ray, originalHit, maxClickDistance);
         SpawnClickEffect(groundEffectPosition);
+    }
+
+    public void ShowTargetIndicator(Transform targetTransform)
+    {
+        if (targetIndicatorPrefab == null || targetTransform == null) return;
+
+        HideTargetIndicator();
+
+        activeTarget = targetTransform;
+        activeTargetIndicator = Instantiate(targetIndicatorPrefab, targetTransform.position + targetIndicatorOffset, Quaternion.identity);
+    }
+
+    public void HideTargetIndicator()
+    {
+        activeTarget = null;
+
+        if (activeTargetIndicator != null)
+        {
+            Destroy(activeTargetIndicator);
+            activeTargetIndicator = null;
+        }
     }
 
     public void SpawnTargetEffect(Transform targetTransform)
