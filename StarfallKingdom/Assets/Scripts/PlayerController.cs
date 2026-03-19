@@ -54,12 +54,18 @@ public class PlayerController : MonoBehaviour
 
     private void HandleClick()
     {
-        if (!movement.TryHandleClick(combat.IsBusy, out Interactable interactable))
+        if (!movement.TryHandleClick(out Interactable interactable))
         {
             return;
         }
 
-        combat.HandleClickResult(interactable);
+        if (interactable != null)
+        {
+            combat.HandleClickResult(interactable);
+            return;
+        }
+
+        combat.CancelCurrentAction();
     }
 
     private void UpdateAnimations()

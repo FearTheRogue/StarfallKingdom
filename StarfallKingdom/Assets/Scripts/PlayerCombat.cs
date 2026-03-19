@@ -86,6 +86,19 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+    public void CancelCurrentAction()
+    {
+        if (currentActionRoutine != null)
+        {
+            StopCoroutine(currentActionRoutine);
+            currentActionRoutine = null;
+        }
+
+        isBusy = false;
+        movement.SetStopped(false);
+        ClearTarget();
+    }
+
     private IEnumerator AttackRoutine()
     {
         isBusy = true;

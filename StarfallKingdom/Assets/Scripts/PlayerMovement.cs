@@ -25,11 +25,11 @@ public class PlayerMovement : MonoBehaviour
         mainCamera = Camera.main;
     }
 
-    public bool TryHandleClick(bool isBusy, out Interactable interactable)
+    public bool TryHandleClick(out Interactable interactable)
     {
         interactable = null;
 
-        if (isBusy || mainCamera == null || Mouse.current == null) return false;
+        if (mainCamera == null || Mouse.current == null) return false;
 
         Ray ray = mainCamera.ScreenPointToRay(Mouse.current.position.ReadValue());
 
