@@ -1837,6 +1837,8 @@ GameObject:
   - component: {fileID: 1025662871}
   - component: {fileID: 1025662872}
   - component: {fileID: 919132148973134529}
+  - component: {fileID: 919132148973134530}
+  - component: {fileID: 919132148973134531}
   m_Layer: 7
   m_Name: Farmer
   m_TagString: Interactable
@@ -1861,6 +1863,30 @@ MonoBehaviour:
   maxIdleTime: 3
   destinationThreshold: 0.1
   navMeshSampleDistance: 2
+--- !u!114 &919132148973134530
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148973134528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a4b85f22f7918469b5c49666e03b3b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::EnemyAnimationDriver
+--- !u!114 &919132148973134531
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148973134528}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 74f26a116bbe4b44192d0680b8e662dc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CharacterAnimationController
 --- !u!1 &922430256684784225
 GameObject:
   m_ObjectHideFlags: 0
