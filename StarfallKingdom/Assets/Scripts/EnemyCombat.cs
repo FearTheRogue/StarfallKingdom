@@ -1,6 +1,7 @@
+using System.Collections;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.AI;
-using System.Collections;
 
 [RequireComponent(typeof(NavMeshAgent))]
 [RequireComponent(typeof(EnemyWander))]
@@ -11,6 +12,7 @@ public class EnemyCombat : MonoBehaviour
     [SerializeField] private float chaseRange = 8f;
     [SerializeField] private float attackRange = 1.75f;
     [SerializeField] private float attackCooldown = 1.5f;
+    [SerializeField] private float attackHitDelay = 0.4f;
     [SerializeField] private int attackDamage = 1;
     [SerializeField] private float lookRotationSpeed = 8f;
 
@@ -43,22 +45,13 @@ public class EnemyCombat : MonoBehaviour
 
     private void Update()
     {
-        if (player == null)
-        {
-            return;
-        }
+        if (player == null) return;
 
         float distanceToPlayer = Vector3.Distance(transform.position, player.position);
 
-        if (!isAggro && distanceToPlayer <= chaseRange)
-        {
-            SetAggro(true);
-        }
+        if (!isAggro && distanceToPlayer <= chaseRange) SetAggro(true);
 
-        if (!isAggro)
-        {
-            return;
-        }
+        if (!isAggro) return;
 
         if (distanceToPlayer > chaseRange * 1.5f)
         {
@@ -94,15 +87,14 @@ public class EnemyCombat : MonoBehaviour
     private IEnumerator AttackRoutine()
     {
         isAttacking = true;
+        agent.isStopped = true;
         animationController.TriggerAttack();
 
-        yield return new WaitForSeconds(attackCooldown);
+        yield return new WaitForSeconds(attackHitDelay);
 
-        if (playerActor != null)
-        {
-            playerActor.TakeDamage(attackDamage);
-        }
+        if (playerActor != null) playerActor.TakeDamage(attackDamage);
 
+        yield return new WaitForSeconds(Mathf.Max(0f, attackCooldown - attackHitDelay));
         isAttacking = false;
     }
 
@@ -111,16 +103,9 @@ public class EnemyCombat : MonoBehaviour
         Vector3 direction = (targetPosition - transform.position).normalized;
         direction.y = 0f;
 
-        if (direction.sqrMagnitude <= 0f)
-        {
-            return;
-        }
+        if (direction.sqrMagnitude <= 0f) return;
 
         Quaternion targetRotation = Quaternion.LookRotation(direction);
-        transform.rotation = Quaternion.Slerp(
-            transform.rotation,
-            targetRotation,
-            Time.deltaTime * lookRotationSpeed
-        );
+        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, lookRotationSpeed * Time.deltaTime);
     }
 }
