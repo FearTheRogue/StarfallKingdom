@@ -15,6 +15,7 @@ public class EnemyWander : MonoBehaviour
     private NavMeshAgent agent;
     private float idleTimer;
     private bool isWaiting;
+    private bool canWander = true;
     private Vector3 startPosition;
 
     private void Awake()
@@ -30,7 +31,7 @@ public class EnemyWander : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log($"Waiting: {isWaiting}, Timer: {idleTimer}");
+        if (!canWander) return;
 
         if (isWaiting)
         {
@@ -82,6 +83,21 @@ public class EnemyWander : MonoBehaviour
         else
         {
             StartWaiting();
+        }
+    }
+
+    public void SetWandering(bool enabled)
+    {
+        canWander = enabled;
+        isWaiting = false;
+
+        if (!canWander)
+        {
+            agent.ResetPath();
+        }
+        else
+        {
+            SetNewDestination();
         }
     }
 }
