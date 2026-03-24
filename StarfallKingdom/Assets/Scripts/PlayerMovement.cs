@@ -1,3 +1,4 @@
+using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -11,6 +12,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float maxClickDistance = 100f;
 
     [Header("Movement")]
+    [SerializeField] private float walkSpeed = 3.5f;
+    [SerializeField] private float sprintSpeed = 6f;
     [SerializeField] private float lookRotationSpeed = 8f;
     [SerializeField] private float movementThreshold = 0.01f;
 
@@ -18,11 +21,15 @@ public class PlayerMovement : MonoBehaviour
     private PlayerEffects effects;
     private Camera mainCamera;
 
+    private bool isSprinting;
+
     private void Awake()
     {
         agent = GetComponent<NavMeshAgent>();
         effects = GetComponent<PlayerEffects>();
         mainCamera = Camera.main;
+
+        agent.speed = walkSpeed;
     }
 
     public bool TryHandleClick(out Interactable interactable)
@@ -51,6 +58,18 @@ public class PlayerMovement : MonoBehaviour
 
         agent.SetDestination(hit.point);
         return true;
+    }
+
+    public void ToggleSprint()
+    {
+        isSprinting = !isSprinting;
+        agent.speed = isSprinting ? sprintSpeed : walkSpeed;
+    }
+
+    public void SetSprint()
+    {
+        isSprinting = !isSprinting;
+        agent.speed = isSprinting ? sprintSpeed : walkSpeed;
     }
 
     public void MoveTo(Vector3 destination)
@@ -92,4 +111,5 @@ public class PlayerMovement : MonoBehaviour
     }
 
     public float CurrentSpeed => agent.velocity.magnitude;
+    public bool IsSprinting => isSprinting;
 }
