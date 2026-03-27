@@ -165,3 +165,83 @@ Assets/
 ├── Prefabs/
 ├── Scenes/
 └── ...
+```
+
+---
+
+## What I’ve Focused On As A Junior Developer
+
+As someone working toward a junior gameplay/software role, I’ve used this project to develop habits that are valuable in a professional environment:
+
+- Writing code that is easier to extend
+- Reducing tightly coupled logic
+- Naming things clearly and consistently
+- Iterating on systems instead of settling for the first version
+- Thinking about how a feature fits into the wider project
+- Improving readability and maintainability as the project evolves
+
+This project reflects the way I want to work in a team setting:  
+**curious, practical, iterative, and focused on writing code that can grow with the project.**
+
+---
+
+## Running the Project
+
+1. Open the project in **Unity 6**
+2. Load the main scene
+3. Press Play
+4. Use mouse input to:
+   - click to move
+   - target interactables/enemies
+   - interact with items
+   - control the camera zoom
+
+---
+
+## Future Improvements
+
+Some areas I want to continue improving include:
+
+- stronger AI state handling
+- cleaner separation of shared combat logic
+- more robust UI feedback
+- inventory and item systems
+- more polished enemy behaviour
+- better animation event workflows
+- improved visual feedback during combat
+
+---
+
+## Repository Purpose
+
+This repository is part of my portfolio as a **junior developer** and is intended to demonstrate:
+- practical Unity/C# development ability
+- system design thinking
+- willingness to refactor and improve code
+- a strong interest in gameplay programming
+
+---
+
+## About Me
+
+I’m a junior developer with a strong interest in **gameplay systems**, **interactive software**, and **writing clean, maintainable code**.
+
+This project is one of the ways I’m continuing to build practical experience outside of formal employment by creating, refining, and documenting systems that reflect real development thinking.
+
+---
+
+## Contact
+
+- **LinkedIn:** [COMING SOON]
+- **Portfolio:** [COMING SOON]
+- **GitHub:** [COMING SOON]
+
+---
+
+## Notes
+
+This project is actively evolving, and the repository is intended to showcase both:
+- progress over time
+- the way I approach learning, iteration, and technical problem-solving
+
+If you're viewing this as part of an application or portfolio review, thank you for taking the time to look through my work.
