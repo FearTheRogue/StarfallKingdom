@@ -1,3 +1,4 @@
+using System.Runtime.CompilerServices;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AI;
@@ -13,15 +14,21 @@ public class PlayerMovement : MonoBehaviour
 
     [Header("Movement")]
     [SerializeField] private float walkSpeed = 3.5f;
-    [SerializeField] private float sprintSpeed = 6f;
     [SerializeField] private float lookRotationSpeed = 8f;
     [SerializeField] private float movementThreshold = 0.01f;
+
+    [Header("Sprint")]
+    [SerializeField] private float sprintSpeed = 6f;
+    [SerializeField] private float maxSprintTime = 5f;
+    [SerializeField] private float sprintDrainRate = 1f;
+    [SerializeField] private float sprintRecoveryRate = 0.75f;
 
     private NavMeshAgent agent;
     private PlayerEffects effects;
     private Camera mainCamera;
 
     private bool isSprinting;
+    private float currentSprintTime;
 
     private void Awake()
     {
@@ -30,6 +37,12 @@ public class PlayerMovement : MonoBehaviour
         mainCamera = Camera.main;
 
         agent.speed = walkSpeed;
+        currentSprintTime = maxSprintTime;
+    }
+
+    private void Update()
+    {
+        HandleSprintStamina();
     }
 
     public bool TryHandleClick(out Interactable interactable)
@@ -62,14 +75,51 @@ public class PlayerMovement : MonoBehaviour
 
     public void ToggleSprint()
     {
+        if (isSprinting)
+        {
+            SetSprint(false);
+            return;
+        }
+        
+        if (currentSprintTime > 0f)
+        {
+            SetSprint(true);
+        }
+    }
+
+    public void SetSprint(bool sprinting)
+    {
+        if (sprinting && currentSprintTime <= 0f)
+        {
+            sprinting = false;
+        }
+
         isSprinting = !isSprinting;
         agent.speed = isSprinting ? sprintSpeed : walkSpeed;
     }
 
-    public void SetSprint()
+    private void HandleSprintStamina()
     {
-        isSprinting = !isSprinting;
-        agent.speed = isSprinting ? sprintSpeed : walkSpeed;
+        bool isMoving = agent.velocity.sqrMagnitude > movementThreshold;
+
+        if (isSprinting && isMoving)
+        {
+            currentSprintTime -= sprintDrainRate * Time.deltaTime;
+
+            if (currentSprintTime <= 0f)
+            {
+                currentSprintTime = 0f;
+                SetSprint(false);
+            }
+
+            return;
+        }
+
+        if (currentSprintTime < maxSprintTime)
+        {
+            currentSprintTime += sprintRecoveryRate * Time.deltaTime;
+            currentSprintTime = Mathf.Min(currentSprintTime, maxSprintTime);
+        }
     }
 
     public void MoveTo(Vector3 destination)
@@ -112,4 +162,7 @@ public class PlayerMovement : MonoBehaviour
 
     public float CurrentSpeed => agent.velocity.magnitude;
     public bool IsSprinting => isSprinting;
+    public float CurrentSprintTime => currentSprintTime;
+    public float MaxSprintTime => maxSprintTime;
+    public float SprintNormalised => maxSprintTime > 0f ? currentSprintTime / maxSprintTime : 0f;
 }
