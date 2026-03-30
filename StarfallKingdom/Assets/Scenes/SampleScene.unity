@@ -1802,7 +1802,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SprintBarUI
   movement: {fileID: 919132148444145756}
   fillImage: {fileID: 59190553}
-  hideWhenFull: 0
+  hideWhenFull: 1
 --- !u!1 &1609474972
 GameObject:
   m_ObjectHideFlags: 0
