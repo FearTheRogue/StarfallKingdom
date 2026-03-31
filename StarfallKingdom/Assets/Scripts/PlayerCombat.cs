@@ -83,6 +83,9 @@ public class PlayerCombat : MonoBehaviour
             case InteractionTypes.Item:
                 StartActionRoutine(PickupRoutine());
                 break;
+            case InteractionTypes.Resource:
+                StartActionRoutine(ResourceRoutine());
+                break;
         }
     }
 
@@ -126,6 +129,30 @@ public class PlayerCombat : MonoBehaviour
         }
 
         yield break;
+    }
+
+    private IEnumerator ResourceRoutine()
+    {
+        isBusy = true;
+        movement.SetStopped(true);
+        animationController.TriggerAttack();
+
+        yield return new WaitForSeconds(attackDelay);
+
+        if (HasValidTarget() && currentTarget.TryGetComponent(out OreNode oreNode))
+        {
+            oreNode.Mine(1);
+        }
+
+        yield return new WaitForSeconds(Mathf.Max(0f, attackSpeed - attackDelay));
+
+        isBusy = false;
+        movement.SetStopped(false);
+
+        if (!HasValidTarget())
+        {
+            currentActionRoutine = null;
+        }
     }
 
     private void ApplyAttack()

@@ -1,7 +1,7 @@
 using Unity.VisualScripting;
 using UnityEngine;
 
-public enum InteractionTypes { Enemy, Item }
+public enum InteractionTypes { Enemy, Item, Resource }
 public class Interactable : MonoBehaviour
 {
     public Actor myActor { get; private set; }
