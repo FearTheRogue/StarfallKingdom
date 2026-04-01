@@ -9,8 +9,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6459829107365075029}
-  - component: {fileID: 7374136589427455401}
-  - component: {fileID: 8410840214376700846}
   m_Layer: 7
   m_Name: Dropped Stone
   m_TagString: Interactable
@@ -34,35 +32,6 @@ Transform:
   - {fileID: 7385855497265893435}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &7374136589427455401
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 315959723519504874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b859582d8ede74f478d331cc75cd2cc4, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::OreNode
-  resourceType: 1
-  resourceAmount: 3
-  hitPoints: 3
-  dropppedResourcePrefab: {fileID: 0}
---- !u!114 &8410840214376700846
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 315959723519504874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 43e2b4aa4dbeb2d468ee176c54c497ba, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::Interactable
-  interactionType: 2
 --- !u!1 &2301049118527372370
 GameObject:
   m_ObjectHideFlags: 0
@@ -75,6 +44,8 @@ GameObject:
   - component: {fileID: 3773776190910525830}
   - component: {fileID: 1245492182413020432}
   - component: {fileID: 3636880135515409598}
+  - component: {fileID: 1265399684176837677}
+  - component: {fileID: 5874318247650649934}
   m_Layer: 7
   m_Name: Cube
   m_TagString: Interactable
@@ -175,3 +146,30 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
+--- !u!114 &1265399684176837677
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2301049118527372370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43e2b4aa4dbeb2d468ee176c54c497ba, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Interactable
+  interactionType: 1
+--- !u!114 &5874318247650649934
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2301049118527372370}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5aff9aaf6c938c141b0921b9b2af7ee4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ResourcePickup
+  resourceType: 0
+  amount: 1

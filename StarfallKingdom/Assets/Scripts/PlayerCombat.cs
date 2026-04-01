@@ -141,7 +141,7 @@ public class PlayerCombat : MonoBehaviour
 
         if (HasValidTarget() && currentTarget.TryGetComponent(out OreNode oreNode))
         {
-            oreNode.Mine(1);
+            oreNode.MineHit();
         }
 
         yield return new WaitForSeconds(Mathf.Max(0f, attackSpeed - attackDelay));
