@@ -1107,6 +1107,9 @@ MonoBehaviour:
   droppedResourcePrefab: {fileID: 315959723519504874, guid: bd8d683d9ae609749a7046f3ac52c29f, type: 3}
   dropSpawnPoint: {fileID: 271930551}
   randomDropOffset: {x: 0.5, y: 0, z: 0.5}
+  minLaunchForce: 2.5
+  maxLaunchForce: 4
+  upwardsLaunchBias: 1.2
 --- !u!114 &711718532
 MonoBehaviour:
   m_ObjectHideFlags: 0
