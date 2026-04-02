@@ -14,7 +14,10 @@ public class OreNode : MonoBehaviour
     [SerializeField] private Transform dropSpawnPoint;
     [SerializeField] private Vector3 randomDropOffset = new Vector3(0.5f, 0f, 0.5f);
 
-    
+    [Header("Launch")]
+    [SerializeField] private float minLaunchForce = 2.5f;
+    [SerializeField] private float maxLaunchForce = 4f;
+    [SerializeField] private float upwardsLaunchBias = 1.2f;
 
     public ResourceType ResourceType => resourceType;
     public bool IsDepleted => hitsRemaining <= 0f;
@@ -44,9 +47,9 @@ public class OreNode : MonoBehaviour
 
         if (droppedObject.TryGetComponent(out Rigidbody rd))
         {
-            Vector3 launchDirection = new Vector3(Random.Range(-1f, 1f), 1.2f, Random.Range(-1f, 1f)).normalized;
+            Vector3 launchDirection = new Vector3(Random.Range(-1f, 1f), upwardsLaunchBias, Random.Range(-1f, 1f)).normalized;
 
-            float launchForce = Random.Range(2.5f, 4f);
+            float launchForce = Random.Range(minLaunchForce, maxLaunchForce);
             rd.AddForce(launchDirection * launchForce, ForceMode.Impulse);
         }
     }
