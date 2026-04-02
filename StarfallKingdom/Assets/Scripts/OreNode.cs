@@ -1,3 +1,4 @@
+using Mono.Cecil;
 using UnityEngine;
 
 public class OreNode : MonoBehaviour
@@ -12,15 +13,16 @@ public class OreNode : MonoBehaviour
     [SerializeField] private Vector3 randomDropOffset = new Vector3(0.5f, 0f, 0.5f);
 
     public ResourceType ResourceType => resourceType;
+    public bool IsDepleted => hitsRemaining <= 0f;
 
     public void MineHit()
     {
-        if (hitsRemaining <= 0) return;
+        if (IsDepleted) return;
 
         SpawnDrop();
         hitsRemaining--;
 
-        if (hitsRemaining <= 0)
+        if (IsDepleted)
         {
             Deplete();
         }

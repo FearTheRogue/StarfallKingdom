@@ -139,10 +139,7 @@ public class PlayerCombat : MonoBehaviour
 
         yield return new WaitForSeconds(attackDelay);
 
-        if (HasValidTarget() && currentTarget.TryGetComponent(out OreNode oreNode))
-        {
-            oreNode.MineHit();
-        }
+        ApplyResourceHit();
 
         yield return new WaitForSeconds(Mathf.Max(0f, attackSpeed - attackDelay));
 
@@ -152,6 +149,24 @@ public class PlayerCombat : MonoBehaviour
         if (!HasValidTarget())
         {
             currentActionRoutine = null;
+        }
+    }
+
+    private void ApplyResourceHit()
+    {
+        if (!HasValidTarget()) return;
+
+        if (!currentTarget.TryGetComponent(out OreNode oreNode))
+        {
+            ClearTarget();
+            return;
+        }
+
+        oreNode.MineHit();
+
+        if (oreNode.IsDepleted)
+        {
+            ClearTarget();
         }
     }
 
