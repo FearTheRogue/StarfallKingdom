@@ -3384,6 +3384,7 @@ MonoBehaviour:
   attackDelay: 0.3
   interactionDistance: 1.5
   attackDamage: 1
+  hasPickaxe: 0
 --- !u!1 &919132148973134528
 GameObject:
   m_ObjectHideFlags: 0

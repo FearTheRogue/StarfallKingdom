@@ -12,6 +12,9 @@ public class PlayerCombat : MonoBehaviour
     [SerializeField] private float interactionDistance = 1.5f;
     [SerializeField] private int attackDamage = 1;
 
+    [Header("Tools")]
+    [SerializeField] private bool hasPickaxe = false;
+
     private PlayerMovement movement;
     private PlayerEffects effects;
     private CharacterAnimationController animationController;
@@ -84,6 +87,13 @@ public class PlayerCombat : MonoBehaviour
                 StartActionRoutine(PickupRoutine());
                 break;
             case InteractionTypes.Resource:
+                if (!CanMineResources())
+                {
+                    Debug.Log("Cannot mine resources: player doesn't have a pickaxe.");
+                    ClearTarget();
+                    return;
+                }
+
                 StartActionRoutine(ResourceRoutine());
                 break;
         }
@@ -192,6 +202,11 @@ public class PlayerCombat : MonoBehaviour
         {
             ClearTarget();
         }
+    }
+
+    private bool CanMineResources()
+    {
+        return hasPickaxe;
     }
 
     private bool HasValidTarget()
