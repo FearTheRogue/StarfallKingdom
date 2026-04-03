@@ -14,6 +14,7 @@ public class PlayerCombat : MonoBehaviour
 
     [Header("Tools")]
     [SerializeField] private bool hasPickaxe = false;
+    [SerializeField] private bool debugBypassPickaxeRequirement = false;
 
     private PlayerMovement movement;
     private PlayerEffects effects;
@@ -206,7 +207,7 @@ public class PlayerCombat : MonoBehaviour
 
     private bool CanMineResources()
     {
-        return hasPickaxe;
+        return hasPickaxe || debugBypassPickaxeRequirement;
     }
 
     private bool HasValidTarget()
