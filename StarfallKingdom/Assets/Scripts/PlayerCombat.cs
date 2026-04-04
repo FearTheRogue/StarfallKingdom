@@ -78,7 +78,7 @@ public class PlayerCombat : MonoBehaviour
         movement.Stop();
         movement.FaceTarget(currentTarget.transform.position);
 
-        switch (currentTarget.interactionType)
+        switch (currentTarget.InteractionType)
         {
             case InteractionTypes.Enemy:
                 StartActionRoutine(AttackRoutine());
@@ -136,7 +136,7 @@ public class PlayerCombat : MonoBehaviour
         if (HasValidTarget())
         {
             TryCollectSpecialItem(currentTarget.gameObject);
-            currentTarget.InteractWithItem();
+            currentTarget.InteractWithItem(this);
             ClearTarget();
         }
 
