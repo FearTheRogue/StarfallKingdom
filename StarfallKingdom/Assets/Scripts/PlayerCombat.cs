@@ -205,6 +205,11 @@ public class PlayerCombat : MonoBehaviour
         }
     }
 
+    public void SetHasPickaxe(bool value)
+    {
+        hasPickaxe = value;
+    }
+
     private bool CanMineResources()
     {
         return hasPickaxe || debugBypassPickaxeRequirement;
