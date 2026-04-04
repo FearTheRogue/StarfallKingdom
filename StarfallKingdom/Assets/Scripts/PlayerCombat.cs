@@ -200,7 +200,7 @@ public class PlayerCombat : MonoBehaviour
             return;
         }
 
-        Actor targetActor = currentTarget.myActor;
+        Actor targetActor = currentTarget.MyActor;
 
         if (targetActor == null || targetActor.currentHealth <= 0)
         {

@@ -4,18 +4,25 @@ using UnityEngine;
 public enum InteractionTypes { Enemy, Item, Resource }
 public class Interactable : MonoBehaviour
 {
-    public Actor myActor { get; private set; }
+    public Actor MyActor { get; private set; }
 
-    public InteractionTypes interactionType;
+    [SerializeField] private InteractionTypes interactionType;
+    public InteractionTypes InteractionType => interactionType;
 
     private void Awake()
     {
         if (interactionType == InteractionTypes.Enemy)
-            myActor = GetComponent<Actor>(); ;
+            MyActor = GetComponent<Actor>(); ;
     }
 
-    public void InteractWithItem()
+    public void InteractWithItem(PlayerCombat playerCombat)
     {
+        if (TryGetComponent(out PickaxePickup pickaxePickup))
+        {
+            pickaxePickup.Collect(playerCombat);
+            return;
+        }
+
         Destroy(gameObject);
     }
 }
