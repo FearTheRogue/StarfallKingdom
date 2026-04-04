@@ -135,11 +135,23 @@ public class PlayerCombat : MonoBehaviour
 
         if (HasValidTarget())
         {
+            TryCollectSpecialItem(currentTarget.gameObject);
             currentTarget.InteractWithItem();
             ClearTarget();
         }
 
         yield break;
+    }
+
+    private void TryCollectSpecialItem(GameObject targetObject)
+    {
+        if (targetObject == null)
+            return;
+
+        if (targetObject.TryGetComponent(out PickaxePickup pickaxePickup))
+        {
+            pickaxePickup.Collect(this);
+        }
     }
 
     private IEnumerator ResourceRoutine()
