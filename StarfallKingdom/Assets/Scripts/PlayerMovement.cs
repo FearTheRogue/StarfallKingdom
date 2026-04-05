@@ -61,7 +61,7 @@ public class PlayerMovement : MonoBehaviour
         {
             interactable = foundInteractable;
 
-            if (foundInteractable.interactionType == InteractionTypes.Enemy)
+            if (foundInteractable.InteractionType == InteractionTypes.Enemy)
             {
                 effects.SpawnTargetEffect(foundInteractable.transform);
             }
@@ -94,7 +94,7 @@ public class PlayerMovement : MonoBehaviour
             sprinting = false;
         }
 
-        isSprinting = !isSprinting;
+        isSprinting = sprinting;
         agent.speed = isSprinting ? sprintSpeed : walkSpeed;
     }
 
