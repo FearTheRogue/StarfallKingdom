@@ -6,8 +6,8 @@ public class SprintBarUI : MonoBehaviour
 {
     [SerializeField] private PlayerMovement movement;
     [SerializeField] private Image fillImage;
-    [SerializeField] private GameObject barVisualRoot;
-    [SerializeField] private bool hideWhenFull = false;
+    [SerializeField] private CanvasGroup barCanvasGroup;
+    [SerializeField] private bool hideWhenFull = true;
 
     private void Awake()
     {
@@ -16,24 +16,29 @@ public class SprintBarUI : MonoBehaviour
             Debug.LogWarning("SprintBarUI: Fill Image is not assigned!");
         }
 
-        if (barVisualRoot == null)
+        if (barCanvasGroup == null)
         {
-            barVisualRoot = fillImage != null ? fillImage.transform.parent.gameObject : null;
+            Debug.LogWarning("SprintBarUI: Bar CanvasGroup is not assigned!");
         }
     }
 
     private void Update()
     {
-        if (movement == null || fillImage == null) return;
+        if (movement == null || fillImage == null || barCanvasGroup == null) return;
+
+        Debug.Log($"Sprint: {movement.IsSprinting}, Value: {movement.SprintNormalised}");
 
         fillImage.fillAmount = movement.SprintNormalised;
 
         if (!hideWhenFull)
         {
+            barCanvasGroup.alpha = 1.0f;
             return;
         }
 
         bool shouldShow = movement.IsSprinting || movement.SprintNormalised < 1f;
-        barVisualRoot.SetActive(shouldShow);
+        barCanvasGroup.alpha = shouldShow ? 1.0f : 0.0f;
+        barCanvasGroup.interactable = false;
+        barCanvasGroup.blocksRaycasts = false;
     }
 }

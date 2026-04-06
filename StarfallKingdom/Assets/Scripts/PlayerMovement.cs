@@ -1,5 +1,3 @@
-using System.Runtime.CompilerServices;
-using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.AI;
 using UnityEngine.InputSystem;
@@ -78,12 +76,14 @@ public class PlayerMovement : MonoBehaviour
         if (isSprinting)
         {
             SetSprint(false);
+            Debug.Log("Sprint OFF");
             return;
         }
-        
+
         if (currentSprintTime > 0f)
         {
             SetSprint(true);
+            Debug.Log("Sprint ON");
         }
     }
 
