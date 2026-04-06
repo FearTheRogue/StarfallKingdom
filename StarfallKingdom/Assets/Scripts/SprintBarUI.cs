@@ -36,7 +36,7 @@ public class SprintBarUI : MonoBehaviour
             return;
         }
 
-        bool shouldShow = movement.IsSprinting || movement.SprintNormalised < 1f;
+        bool shouldShow = movement.SprintNormalised < 1f;
         barCanvasGroup.alpha = shouldShow ? 1.0f : 0.0f;
         barCanvasGroup.interactable = false;
         barCanvasGroup.blocksRaycasts = false;
