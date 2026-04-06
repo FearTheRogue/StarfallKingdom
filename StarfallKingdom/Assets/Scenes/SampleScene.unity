@@ -3485,6 +3485,8 @@ GameObject:
   - component: {fileID: 644656597}
   - component: {fileID: 919132148444145756}
   - component: {fileID: 919132148444145757}
+  - component: {fileID: 919132148444145759}
+  - component: {fileID: 919132148444145758}
   - component: {fileID: 919132148444145755}
   - component: {fileID: 919132148444145754}
   m_Layer: 0
@@ -3571,6 +3573,30 @@ MonoBehaviour:
   attackDamage: 1
   hasPickaxe: 0
   debugBypassPickaxeRequirement: 0
+--- !u!114 &919132148444145758
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148444145753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 13ac2f7d09c53894992b1f368ce72689, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerTargeting
+--- !u!114 &919132148444145759
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 919132148444145753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e6b733ffdcb8aeb4e87a9265d9f92a53, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
 --- !u!1 &919132148973134528
 GameObject:
   m_ObjectHideFlags: 0
