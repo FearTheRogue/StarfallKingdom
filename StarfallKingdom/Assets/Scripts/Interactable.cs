@@ -14,11 +14,11 @@ public class Interactable : MonoBehaviour
             MyActor = GetComponent<Actor>(); ;
     }
 
-    public void InteractWithItem(PlayerCombat playerCombat)
+    public void InteractWithItem(PlayerInteraction playerInteraction)
     {
         if (TryGetComponent(out PickaxePickup pickaxePickup))
         {
-            pickaxePickup.Collect(playerCombat);
+            pickaxePickup.Collect(playerInteraction);
             return;
         }
 

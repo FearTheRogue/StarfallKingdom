@@ -13,7 +13,7 @@ public class PlayerCombat : MonoBehaviour
         if (interactable != null)
         {
             currentTarget = interactable;
-            effects.ShowTargetIndicator(interactable.transform);
+            //effects.ShowTargetIndicator(interactable.transform);
             return;
         }
 
@@ -27,7 +27,7 @@ public class PlayerCombat : MonoBehaviour
 
         if (targetObject.TryGetComponent(out PickaxePickup pickaxePickup))
         {
-            pickaxePickup.Collect(this);
+           // pickaxePickup.Collect(this);
         }
     }
 
@@ -39,6 +39,6 @@ public class PlayerCombat : MonoBehaviour
     private void ClearTarget()
     {
         currentTarget = null;
-        effects.HideTargetIndicator();
+        //effects.HideTargetIndicator();
     }
 }

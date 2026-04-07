@@ -3,12 +3,12 @@ using UnityEngine.UIElements;
 
 public class PickaxePickup : MonoBehaviour
 {
-    public void Collect(PlayerCombat playerCombat)
+    public void Collect(PlayerInteraction playerInteraction)
     {
-        if (playerCombat == null)
+        if (playerInteraction == null)
             return;
 
-        playerCombat.SetHasPickaxe(true);
+        playerInteraction.SetHasPickaxe(true);
         Destroy(gameObject);
     }
 }

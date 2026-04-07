@@ -904,7 +904,7 @@ MonoBehaviour:
   m_Center: {x: 0, y: 2, z: 0}
   m_LayerMask:
     serializedVersion: 2
-    m_Bits: 4294967295
+    m_Bits: 119
   m_UseGeometry: 0
   m_DefaultArea: 0
   m_GenerateLinks: 0
@@ -1235,7 +1235,7 @@ SphereCollider:
     serializedVersion: 2
     m_Bits: 0
   m_LayerOverridePriority: 0
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
@@ -3567,12 +3567,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2c9e1a81993b454a8cc316abb1dd3e5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerCombat
-  attackSpeed: 1.5
-  attackDelay: 0.3
-  interactionDistance: 1.5
-  attackDamage: 1
-  hasPickaxe: 0
-  debugBypassPickaxeRequirement: 0
 --- !u!114 &919132148444145758
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3597,6 +3591,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e6b733ffdcb8aeb4e87a9265d9f92a53, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInteraction
+  attackSpeed: 1.5
+  attackDelay: 0.3
+  interactionDistance: 1.5
+  attackDamage: 1
+  hasPickaxe: 0
+  debugBypassPickaxeRequirement: 0
 --- !u!1 &919132148973134528
 GameObject:
   m_ObjectHideFlags: 0
