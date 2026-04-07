@@ -67,7 +67,7 @@ public class PlayerController : MonoBehaviour
 
     private void UpdateAnimations()
     {
-        animationController.SetMoveSpeed(movement.CurrentSpeed);
+        animationController.SetMoveSpeed(interaction.CurrentMoveSpeed);
     }
 
     public void FinishPickupAction()
