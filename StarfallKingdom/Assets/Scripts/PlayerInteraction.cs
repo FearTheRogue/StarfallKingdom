@@ -1,16 +1,214 @@
+using System.Collections;
 using UnityEngine;
 
+[RequireComponent(typeof(PlayerMovement))]
+[RequireComponent(typeof(PlayerEffects))]
+[RequireComponent(typeof(CharacterAnimationController))]
+[RequireComponent(typeof(PlayerTargeting))]
 public class PlayerInteraction : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    [Header("Combat")]
+    [SerializeField] private float attackSpeed = 1.5f;
+    [SerializeField] private float attackDelay = 0.3f;
+    [SerializeField] private float interactionDistance = 1.5f;
+    [SerializeField] private int attackDamage = 1;
+
+    [Header("Tools")]
+    [SerializeField] private bool hasPickaxe = false;
+    [SerializeField] private bool debugBypassPickaxeRequirement = false;
+
+    private PlayerMovement movement;
+    private PlayerEffects effects;
+    private CharacterAnimationController animationController;
+    private PlayerTargeting targeting;
+
+    private Coroutine currentActionRoutine;
+    private bool isBusy;
+
+    private void Awake()
     {
-        
+        movement = GetComponent<PlayerMovement>();
+        effects = GetComponent<PlayerEffects>();
+        animationController = GetComponent<CharacterAnimationController>();
+        targeting = GetComponent<PlayerTargeting>();
     }
 
-    // Update is called once per frame
-    void Update()
+    public bool IsBusy => isBusy;
+    public float CurrentMoveSpeed => isBusy ? 0f : movement.CurrentSpeed;
+
+    public void HandleTargetMovement()
     {
-        
+        if (!targeting.HasValidTarget()) return;
+
+        Interactable currentTarget = targeting.CurrentTarget;
+        float distanceToTarget = Vector3.Distance(transform.position, currentTarget.transform.position);
+
+        if (distanceToTarget <= interactionDistance)
+        {
+            TryInteractWithTarget();
+            return;
+        }
+
+        if (!isBusy)
+        {
+            movement.MoveTo(currentTarget.transform.position);
+        }
+    }
+
+    public void FinishPickupAction()
+    {
+        movement.SetStopped(false);
+        isBusy = false;
+        currentActionRoutine = null;
+    }
+
+    public void CancelCurrentAction()
+    {
+        if (currentActionRoutine != null)
+        {
+            StopCoroutine(currentActionRoutine);
+            currentActionRoutine = null;
+        }
+
+        isBusy = false;
+        movement.SetStopped(false);
+        targeting.ClearTarget();
+    }
+
+    public void SetHasPickaxe(bool value)
+    {
+        hasPickaxe = value;
+    }
+
+    private void TryInteractWithTarget()
+    {
+        if (isBusy || !targeting.HasValidTarget()) return;
+
+        Interactable currentTarget = targeting.CurrentTarget;
+
+        movement.Stop();
+        movement.FaceTarget(currentTarget.transform.position);
+
+        switch (currentTarget.InteractionType)
+        {
+            case InteractionTypes.Enemy:
+                StartActionRoutine(AttackRoutine());
+                break;
+
+            case InteractionTypes.Item:
+                StartActionRoutine(PickupRoutine());
+                break;
+            case InteractionTypes.Resource:
+                if (!CanMineResources())
+                {
+                    Debug.Log("Cannot mine resources: player doesn't have a pickaxe.");
+                    targeting.ClearTarget();
+                    return;
+                }
+
+                StartActionRoutine(ResourceRoutine());
+                break;
+        }
+    }
+
+    private bool CanMineResources()
+    {
+        return hasPickaxe || debugBypassPickaxeRequirement;
+    }
+
+    private IEnumerator AttackRoutine()
+    {
+        isBusy = true;
+        animationController.TriggerAttack();
+
+        yield return new WaitForSeconds(attackDelay);
+        ApplyAttack();
+
+        yield return new WaitForSeconds(Mathf.Max(0f, attackSpeed - attackDelay));
+
+        isBusy = false;
+        currentActionRoutine = null;
+    }
+
+    private IEnumerator PickupRoutine()
+    {
+        isBusy = true;
+        movement.SetStopped(true);
+        animationController.TriggerPickup();
+
+        if (targeting.HasValidTarget())
+        {
+            targeting.CurrentTarget.InteractWithItem(this);
+            targeting.ClearTarget();
+        }
+
+        yield break;
+    }
+
+    private IEnumerator ResourceRoutine()
+    {
+        isBusy = true;
+        movement.SetStopped(true);
+        animationController.TriggerAttack();
+
+        yield return new WaitForSeconds(attackDelay);
+
+        ApplyResourceHit();
+
+        yield return new WaitForSeconds(Mathf.Max(0f, attackSpeed - attackDelay));
+
+        isBusy = false;
+        movement.SetStopped(false);
+        currentActionRoutine = null;
+    }
+
+    private void ApplyAttack()
+    {
+        if (!targeting.HasValidTarget()) return;
+
+        Interactable currentTarget = targeting.CurrentTarget;
+        Actor targetActor = currentTarget.MyActor;
+
+        if (targetActor == null || targetActor.currentHealth <= 0)
+        {
+            targeting.ClearTarget();
+            return;
+        }
+
+        effects.SpawnHitEffect(currentTarget.transform.position);
+        targetActor.TakeDamage(attackDamage);
+
+        if (targetActor.currentHealth <= 0)
+        {
+           targeting.ClearTarget();
+        }
+    }
+
+    private void ApplyResourceHit()
+    {
+        if (!targeting.HasValidTarget()) return;
+
+        if (!targeting.CurrentTarget.TryGetComponent(out OreNode oreNode))
+        {
+            targeting.ClearTarget();
+            return;
+        }
+
+        oreNode.MineHit();
+
+        if (oreNode.IsDepleted)
+        {
+            targeting.ClearTarget();
+        }
+    }
+
+    private void StartActionRoutine(IEnumerator routine)
+    {
+        if (currentActionRoutine != null)
+        {
+            StopCoroutine(currentActionRoutine);
+        }
+
+        currentActionRoutine = StartCoroutine(routine);
     }
 }
