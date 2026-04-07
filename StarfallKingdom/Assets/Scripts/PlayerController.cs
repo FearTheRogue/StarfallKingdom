@@ -1,25 +1,25 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.AI;
-using System.Collections;
-
 
 [RequireComponent (typeof(PlayerMovement))]
 [RequireComponent(typeof(PlayerEffects))]
-[RequireComponent(typeof(PlayerCombat))]
+[RequireComponent(typeof(PlayerTargeting))]
+[RequireComponent(typeof(PlayerInteraction))]
 [RequireComponent(typeof(CharacterAnimationController))]
 public class PlayerController : MonoBehaviour
 {
     private CustomActions input;
     private CharacterAnimationController animationController;
     private PlayerMovement movement;
-    private PlayerCombat combat;
+    private PlayerTargeting targeting;
+    private PlayerInteraction interaction;
 
     private void Awake()
     {
         animationController = GetComponent<CharacterAnimationController>();
         movement = GetComponent<PlayerMovement>();
-        combat = GetComponent<PlayerCombat>();
+        targeting = GetComponent<PlayerTargeting>();
+        interaction = GetComponent<PlayerInteraction>();
 
         input = new CustomActions();
         input.Main.Move.performed += OnMovePerformed;
@@ -27,8 +27,8 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        combat.HandleTargetMovement();
-        movement.FaceMovementDirection(combat.IsBusy);
+        interaction.HandleTargetMovement();
+        movement.FaceMovementDirection(interaction.IsBusy);
         UpdateAnimations();
     }
 
@@ -54,22 +54,24 @@ public class PlayerController : MonoBehaviour
 
     private void HandleClick()
     {
-        if (!movement.TryHandleClick(out Interactable interactable))
-        {
-            return;
-        }
+        if (!movement.TryHandleClick(out Interactable interactable)) return;
 
         if (interactable != null)
         {
-            combat.HandleClickResult(interactable);
+            targeting.HandleClickResult(interactable);
             return;
         }
 
-        combat.CancelCurrentAction();
+        interaction.CancelCurrentAction();
     }
 
     private void UpdateAnimations()
     {
         animationController.SetMoveSpeed(movement.CurrentSpeed);
+    }
+
+    public void FinishPickupAction()
+    {
+        interaction.FinishPickupAction();
     }
 }
