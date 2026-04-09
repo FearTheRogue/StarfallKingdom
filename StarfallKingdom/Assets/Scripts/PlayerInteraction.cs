@@ -27,6 +27,8 @@ public class PlayerInteraction : MonoBehaviour
     private Coroutine currentActionRoutine;
     private bool isBusy;
 
+    public PlayerInventory Inventory => inventory;
+
     private void Awake()
     {
         movement = GetComponent<PlayerMovement>();

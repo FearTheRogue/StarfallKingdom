@@ -16,9 +16,17 @@ public class Interactable : MonoBehaviour
 
     public void InteractWithItem(PlayerInteraction playerInteraction)
     {
+        if (playerInteraction == null) return;
+
         if (TryGetComponent(out PickaxePickup pickaxePickup))
         {
             pickaxePickup.Collect(playerInteraction);
+            return;
+        }
+
+        if (TryGetComponent(out InventoryPickup inventoryPickup))
+        {
+            inventoryPickup.Collect(playerInteraction.Inventory);
             return;
         }
 
