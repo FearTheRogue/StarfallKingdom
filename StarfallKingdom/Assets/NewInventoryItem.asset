@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ffdd2f564f04b7f44ab15f591d4521a6, type: 3}
   m_Name: NewInventoryItem
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItemData
-  itemId: 
-  itemName: 
+  itemId: emerald_gem
+  itemName: Emerald
   icon: {fileID: 0}
-  category: 0
+  category: 3
