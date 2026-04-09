@@ -2,7 +2,7 @@ using System.Diagnostics.Contracts;
 using UnityEngine;
 
 [System.Serializable]
-public class InventorySlot : MonoBehaviour
+public class InventorySlot
 {
     public InventoryItemData itemData;
     public int quantity;
