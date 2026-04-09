@@ -51,11 +51,15 @@ public class InventoryUI : MonoBehaviour
 
     private string BuildInventoryText()
     {
-        if (playerInventory.Items.Count == 0)
-            return "Inventory\n- Empty -";
-
         StringBuilder builder = new StringBuilder();
-        builder.AppendLine("Inventory");
+        builder.AppendLine($"Inventory ({playerInventory.Items.Count}/{playerInventory.MaxSlots})");
+        builder.AppendLine();
+ 
+        if (playerInventory.Items.Count == 0)
+        {
+            builder.AppendLine("- Empty -");
+            return builder.ToString();
+        }
 
         foreach (InventorySlot slot in playerInventory.Items)
         {
