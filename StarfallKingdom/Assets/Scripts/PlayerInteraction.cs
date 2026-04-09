@@ -5,6 +5,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerEffects))]
 [RequireComponent(typeof(CharacterAnimationController))]
 [RequireComponent(typeof(PlayerTargeting))]
+[RequireComponent(typeof(PlayerInventory))]
 public class PlayerInteraction : MonoBehaviour
 {
     [Header("Combat")]
@@ -21,6 +22,7 @@ public class PlayerInteraction : MonoBehaviour
     private PlayerEffects effects;
     private CharacterAnimationController animationController;
     private PlayerTargeting targeting;
+    private PlayerInventory inventory;
 
     private Coroutine currentActionRoutine;
     private bool isBusy;
@@ -31,6 +33,7 @@ public class PlayerInteraction : MonoBehaviour
         effects = GetComponent<PlayerEffects>();
         animationController = GetComponent<CharacterAnimationController>();
         targeting = GetComponent<PlayerTargeting>();
+        inventory = GetComponent<PlayerInventory>();
     }
 
     public bool IsBusy => isBusy;
