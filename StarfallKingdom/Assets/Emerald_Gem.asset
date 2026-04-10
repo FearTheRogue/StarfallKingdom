@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ffdd2f564f04b7f44ab15f591d4521a6, type: 3}
-  m_Name: NewInventoryItem
+  m_Name: Emerald_Gem
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItemData
   itemId: emerald_gem
   itemName: Emerald
