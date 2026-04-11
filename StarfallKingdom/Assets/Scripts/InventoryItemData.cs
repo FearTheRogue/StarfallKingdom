@@ -30,5 +30,5 @@ public class InventoryItemData : ScriptableObject
     public string ItemName => itemName;
     public Sprite Icon => icon;
     public ItemCategory Category => category;
-    public ToolType Tool => toolType;
+    public ToolType ToolType => toolType;
 }
