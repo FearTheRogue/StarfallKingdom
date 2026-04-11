@@ -23,8 +23,12 @@ public class InventoryItemData : ScriptableObject
     [SerializeField] private Sprite icon;
     [SerializeField] private ItemCategory category;
 
+    [Header("Tool Settings")]
+    [SerializeField] private ToolType toolType = ToolType.None;
+
     public string ItemId => itemId;
     public string ItemName => itemName;
     public Sprite Icon => icon;
     public ItemCategory Category => category;
+    public ToolType Tool => toolType;
 }

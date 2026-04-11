@@ -26,8 +26,6 @@ public class SprintBarUI : MonoBehaviour
     {
         if (movement == null || fillImage == null || barCanvasGroup == null) return;
 
-        Debug.Log($"Sprint: {movement.IsSprinting}, Value: {movement.SprintNormalised}");
-
         fillImage.fillAmount = movement.SprintNormalised;
 
         if (!hideWhenFull)
