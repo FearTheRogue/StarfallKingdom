@@ -6,6 +6,7 @@ using UnityEngine;
 [RequireComponent(typeof(CharacterAnimationController))]
 [RequireComponent(typeof(PlayerTargeting))]
 [RequireComponent(typeof(PlayerInventory))]
+[RequireComponent(typeof(PlayerEquipment))]
 public class PlayerInteraction : MonoBehaviour
 {
     [Header("Combat")]
@@ -15,7 +16,6 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private int attackDamage = 1;
 
     [Header("Tools")]
-    [SerializeField] private bool hasPickaxe = false;
     [SerializeField] private bool debugBypassPickaxeRequirement = false;
 
     private PlayerMovement movement;
@@ -23,6 +23,7 @@ public class PlayerInteraction : MonoBehaviour
     private CharacterAnimationController animationController;
     private PlayerTargeting targeting;
     private PlayerInventory inventory;
+    private PlayerEquipment equipment;
 
     private Coroutine currentActionRoutine;
     private bool isBusy;
@@ -36,6 +37,7 @@ public class PlayerInteraction : MonoBehaviour
         animationController = GetComponent<CharacterAnimationController>();
         targeting = GetComponent<PlayerTargeting>();
         inventory = GetComponent<PlayerInventory>();
+        equipment = GetComponent<PlayerEquipment>();
     }
 
     public bool IsBusy => isBusy;
@@ -80,10 +82,10 @@ public class PlayerInteraction : MonoBehaviour
         targeting.ClearTarget();
     }
 
-    public void SetHasPickaxe(bool value)
-    {
-        hasPickaxe = value;
-    }
+    //public void SetHasPickaxe(bool value)
+    //{
+    //    equipment.HasPickaxe = value;
+    //}
 
     private void TryInteractWithTarget()
     {
@@ -118,7 +120,7 @@ public class PlayerInteraction : MonoBehaviour
 
     private bool CanMineResources()
     {
-        return hasPickaxe || debugBypassPickaxeRequirement;
+        return (equipment != null && equipment.HasPickaxe) || debugBypassPickaxeRequirement;
     }
 
     private IEnumerator AttackRoutine()
