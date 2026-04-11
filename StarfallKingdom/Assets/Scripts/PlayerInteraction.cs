@@ -82,11 +82,6 @@ public class PlayerInteraction : MonoBehaviour
         targeting.ClearTarget();
     }
 
-    //public void SetHasPickaxe(bool value)
-    //{
-    //    equipment.HasPickaxe = value;
-    //}
-
     private void TryInteractWithTarget()
     {
         if (isBusy || !targeting.HasValidTarget()) return;
