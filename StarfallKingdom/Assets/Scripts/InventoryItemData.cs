@@ -8,6 +8,12 @@ public enum ItemCategory
     Valuable
 }
 
+public enum ToolType
+{
+    None,
+    Pickaxe
+}
+
 [CreateAssetMenu(fileName = "NewInventoryItem", menuName = "Inventory/Item Data")]
 public class InventoryItemData : ScriptableObject
 {
