@@ -14,5 +14,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItemData
   itemId: emerald_gem
   itemName: Emerald
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 0a2fd28c7a6b1f8478b4b33526d35b92, type: 3}
   category: 3
