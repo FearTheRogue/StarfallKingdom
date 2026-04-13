@@ -16,6 +16,8 @@ public class InventoryGridUI : MonoBehaviour
     private readonly List<InventorySlotUI> spawnedSlots = new List<InventorySlotUI>();
     private bool isOpen;
 
+    public bool IsOpen => isOpen;
+
     private void Start()
     {
         isOpen = startOpen;

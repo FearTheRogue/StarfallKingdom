@@ -8,6 +8,8 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(CharacterAnimationController))]
 public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private InventoryGridUI inventoryUI;
+
     private CustomActions input;
     private CharacterAnimationController animationController;
     private PlayerMovement movement;
@@ -54,6 +56,8 @@ public class PlayerController : MonoBehaviour
 
     private void HandleClick()
     {
+        if (inventoryUI != null && inventoryUI.IsOpen) return;
+
         if (!movement.TryHandleClick(out Interactable interactable)) return;
 
         if (interactable != null)

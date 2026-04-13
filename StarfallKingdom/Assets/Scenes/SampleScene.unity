@@ -1476,6 +1476,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 899958e60bc39eb439ce87f56aba5d04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerController
+  inventoryUI: {fileID: 205498392}
 --- !u!195 &644656598
 NavMeshAgent:
   m_ObjectHideFlags: 0
@@ -8664,6 +8665,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 13228617}
     m_Modifications:
+    - target: {fileID: 5992791978791878554, guid: b273c7c1798742449aa80965769b7ee2, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 6923015359923727449, guid: b273c7c1798742449aa80965769b7ee2, type: 3}
       propertyPath: m_Name
       value: Pickaxe Slot
