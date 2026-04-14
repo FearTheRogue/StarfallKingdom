@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
+using UnityEngine.EventSystems;
 
 [RequireComponent (typeof(PlayerMovement))]
 [RequireComponent(typeof(PlayerEffects))]
@@ -51,12 +52,16 @@ public class PlayerController : MonoBehaviour
 
     private void OnMovePerformed(InputAction.CallbackContext context)
     {
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
+
         HandleClick();
     }
 
     private void HandleClick()
     {
         if (inventoryUI != null && inventoryUI.IsOpen) return;
+
+        if (EventSystem.current != null && EventSystem.current.IsPointerOverGameObject()) return;
 
         if (!movement.TryHandleClick(out Interactable interactable)) return;
 
