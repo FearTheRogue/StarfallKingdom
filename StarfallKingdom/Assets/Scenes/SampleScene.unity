@@ -294,9 +294,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEquipmentUI
   playerEquipment: {fileID: 919132148444145761}
-  pickaxeSlotRoot: {fileID: 5060390628867032190}
   pickaxeSlotUI: {fileID: 5060390628867032191}
-  weaponSlotRoot: {fileID: 611544834}
   weaponSlotUI: {fileID: 0}
 --- !u!114 &13228619
 MonoBehaviour:
@@ -616,8 +614,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 1}
-  m_AnchoredPosition: {x: 1.6000061, y: 0}
-  m_SizeDelta: {x: 602.8, y: 0}
+  m_AnchoredPosition: {x: 1.5999756, y: 0}
+  m_SizeDelta: {x: 654.6, y: 0}
   m_Pivot: {x: 0, y: 0.5}
 --- !u!114 &205498392
 MonoBehaviour:
@@ -1424,8 +1422,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 2, y: -98.1}
-  m_SizeDelta: {x: 1, y: 1}
+  m_AnchoredPosition: {x: 2, y: -121}
+  m_SizeDelta: {x: 50, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &611544836
 MonoBehaviour:
@@ -2783,7 +2781,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 1000, y: 560}
+  m_SizeDelta: {x: 1032.15, y: 560}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &1144237143
 GameObject:
@@ -3251,7 +3249,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0.000061035156, y: -40.050003}
+  m_AnchoredPosition: {x: 0.000061035156, y: -21}
   m_SizeDelta: {x: -40.000134, y: -120.100006}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1334665084
@@ -3274,10 +3272,10 @@ MonoBehaviour:
   m_ChildAlignment: 0
   m_StartCorner: 0
   m_StartAxis: 0
-  m_CellSize: {x: 78.6, y: 5.1}
-  m_Spacing: {x: 116.6, y: 106}
+  m_CellSize: {x: 50, y: 50}
+  m_Spacing: {x: 106, y: 106}
   m_Constraint: 1
-  m_ConstraintCount: 3
+  m_ConstraintCount: 4
 --- !u!1 &1337510302
 GameObject:
   m_ObjectHideFlags: 0
@@ -8186,17 +8184,12 @@ Transform:
   - {fileID: 6670528696257274003}
   m_Father: {fileID: 7509978378923123193}
   m_LocalEulerAnglesHint: {x: 6.7510424, y: 0.00001801982, z: -65.28238}
---- !u!1 &5060390628867032190 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 6923015359923727449, guid: b273c7c1798742449aa80965769b7ee2, type: 3}
-  m_PrefabInstance: {fileID: 5822497638099231451}
-  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5060390628867032191 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 7346586020212541580, guid: b273c7c1798742449aa80965769b7ee2, type: 3}
   m_PrefabInstance: {fileID: 5822497638099231451}
   m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5060390628867032190}
+  m_GameObject: {fileID: 0}
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 856a091699ef15b469df628df7a39c71, type: 3}
@@ -8703,11 +8696,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8932210266585862710, guid: b273c7c1798742449aa80965769b7ee2, type: 3}
       propertyPath: m_SizeDelta.x
-      value: 1
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8932210266585862710, guid: b273c7c1798742449aa80965769b7ee2, type: 3}
       propertyPath: m_SizeDelta.y
-      value: 1
+      value: 50
       objectReference: {fileID: 0}
     - target: {fileID: 8932210266585862710, guid: b273c7c1798742449aa80965769b7ee2, type: 3}
       propertyPath: m_LocalPosition.x
@@ -8743,7 +8736,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 8932210266585862710, guid: b273c7c1798742449aa80965769b7ee2, type: 3}
       propertyPath: m_AnchoredPosition.y
-      value: 84.9
+      value: 100
       objectReference: {fileID: 0}
     - target: {fileID: 8932210266585862710, guid: b273c7c1798742449aa80965769b7ee2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.x

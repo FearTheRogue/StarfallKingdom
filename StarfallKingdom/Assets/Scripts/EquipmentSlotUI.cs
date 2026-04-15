@@ -7,7 +7,10 @@ public class EquipmentSlotUI : MonoBehaviour
     [Header("References")]
     [SerializeField] private Image iconImage;
     [SerializeField] private TextMeshProUGUI labelText;
-    [SerializeField] private GameObject emptyStateObject;
+
+    [Header("Empty State")]
+    [SerializeField] private Sprite emptySprite;
+    [SerializeField] private string emptyLabel = "No Pickaxe";
 
     public void SetSlot(InventoryItemData itemData, string emptyLabel = "Empty")
     {
@@ -18,15 +21,16 @@ public class EquipmentSlotUI : MonoBehaviour
             iconImage.enabled = hasItem && itemData.Icon != null;
             iconImage.sprite = hasItem ? itemData.Icon : null;
         }
-
-        if (labelText != null)
+        else
         {
-            labelText.text = hasItem ? itemData.ItemName : emptyLabel;
+            iconImage.enabled = emptySprite != null;
+            iconImage.sprite = emptySprite;
         }
 
-        if (emptyStateObject != null)
+        if (labelText != null)
+
         {
-            emptyStateObject.SetActive(!hasItem);
+            labelText.text = hasItem ? itemData.ItemName : emptyLabel;
         }
     }
 }
