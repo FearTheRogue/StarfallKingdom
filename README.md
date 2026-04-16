@@ -7,112 +7,129 @@
 ![AI](https://img.shields.io/badge/AI-NavMesh-green)
 ![Input](https://img.shields.io/badge/Input-New%20Input%20System-orange)
 ![Focus](https://img.shields.io/badge/Focus-Gameplay%20Programming-brightgreen)
+![Architecture](https://img.shields.io/badge/Architecture-Component%20Based-success)
 
-A top-down action RPG prototype built in **Unity 6**, inspired by click-to-move RPGs.  
-This project is being developed to strengthen my practical gameplay programming skills, with a focus on **clean code architecture**, **modular systems**, and **scalable feature development**.
+**Starfall Kingdom** is a solo Unity 6 project focused on building a modular top-down action RPG prototype with click-to-move gameplay, combat, gathering, inventory, and equipment systems.
 
----
-
-## About This Project
-
-**Starfall Kingdom** is a solo development project I am using to demonstrate my ability to design and implement gameplay systems in a structured, maintainable way.
-
-The current prototype includes:
-
-- Click-to-move player movement using **NavMesh**
-- Smooth camera follow with zoom
-- Target selection and interaction
-- Player combat and pickup systems
-- Shared animation architecture for player and enemy characters
-- Enemy wandering AI
-- Blend tree locomotion for animations
-- Modular script refactoring into focused components
-
-This repository is intended to show not just a finished result, but also **how I approach development as a junior programmer**:
-- breaking larger systems into smaller components
-- refactoring tutorial code into cleaner architecture
-- building reusable systems rather than one-off solutions
-- thinking about scalability early
+This repository is part of my developer portfolio and is intended to demonstrate how I approach gameplay programming as a junior developer: by building practical systems, refactoring them as the project grows, and focusing on code that is readable, reusable, and easier to extend.
 
 ---
 
-## Why This Project Matters
+## Overview
 
-One challenge for junior developers is proving practical development ability without formal industry experience.  
-This project helps bridge that gap by demonstrating:
+The project began as a simple click-to-move prototype and has gradually expanded into a more structured gameplay sandbox.
 
-- **Ownership of a complete gameplay prototype**
-- **Problem-solving and iteration**
-- **Refactoring beyond tutorial code**
-- **Understanding of maintainability and code structure**
-- **Ability to build systems that can scale as a project grows**
+Current areas of focus include:
 
-Rather than treating this as a one-off tutorial exercise, I am using it as a way to practise working more like a professional gameplay programmer:
-- planning features
-- implementing them incrementally
-- testing and refining behaviour
-- improving structure as the codebase grows
+- Player click-to-move movement using **NavMesh**
+- Combat and interaction with enemies, items, and resource nodes
+- Enemy wandering and animation-driven movement
+- Resource gathering and tool-gated mining
+- Inventory and equipment UI
+- Shared animation architecture across player and enemies
+- Ongoing refactoring into focused, single-responsibility components
+
+Rather than trying to build everything at once, I am treating this project as an iterative development exercise, adding systems in small steps and improving the codebase as the scope grows.
+
+---
+
+## Why I Built This
+
+One challenge as a junior developer is demonstrating practical ability when you do not yet have much formal industry experience.
+
+This project is my way of showing that I can:
+
+- Design and implement gameplay systems in Unity using C#
+- Break larger problems into smaller, testable pieces
+- Refactor prototype code into a cleaner architecture
+- Build reusable components instead of relying on one large controller script
+- Think about maintainability and scalability early
+- Iterate on features instead of stopping at the first working version
+
+This is not just a tutorial follow-along project. A major focus has been taking early systems and restructuring them into something closer to how I would want to work on a real project or as part of a team.
 
 ---
 
 ## Features Implemented
 
 ### Player Systems
-- Click-to-move navigation
-- Target-based interaction system
-- Combat and item pickup logic
-- Movement facing and target facing
-- Shared character animation controller
-- Sprint-ready movement structure
-- Ground click feedback and target indicators
+- Click-to-move navigation using `NavMeshAgent`
+- Target selection for enemies, items, and resources
+- Combat interaction flow
+- Pickup interaction flow
+- Mining interaction flow
+- Sprint mechanic with stamina bar UI
+- Directional facing while moving
+- Equipment-based mining requirement
+- Shared movement-speed-driven animation system
 
 ### Enemy Systems
 - Idle and walk locomotion
-- Random wandering using NavMesh
-- Movement-based animation driving
-- Shared animation setup with the player
+- NavMesh wandering within a defined area
+- Animation driving based on movement speed
+- Shared animation controller setup for player and enemies
+- Groundwork for combat state expansion
 
-### Camera Systems
-- Smooth follow camera
-- Scroll wheel zoom
-- Experimental orbit camera work
+### Resource Systems
+- Mineable ore nodes
+- Resource drops spawned per mining hit
+- Physics-based ore drop launch and spin
+- Pickaxe requirement for mining
+- Pickaxe pickup and equipment slot support
 
-### Architecture / Refactoring
-- `PlayerController` as a high-level coordinator
-- `PlayerMovement` for movement and navigation responsibilities
-- `PlayerCombat` for targeting and combat flow
-- `PlayerEffects` for VFX and targeting feedback
-- `CharacterAnimationController` shared across entities
+### Inventory / Equipment Systems
+- Basic inventory data model
+- Runtime inventory slot system
+- World pickups that can be collected into inventory
+- Grid-based inventory UI
+- Dedicated equipment area
+- Pickaxe equipment slot with placeholder/empty state support
+
+### Camera / UX
+- Camera follow and zoom
+- Target markers and click feedback effects
+- Inventory UI interaction blocking world click-to-move input
 
 ---
 
 ## Technical Highlights
 
-### Modular Design
-A major focus of this project is moving away from large all-in-one scripts and toward a more maintainable component-based structure.
+### Component-Based Architecture
+A major focus of this project is moving away from oversized all-in-one scripts and toward a cleaner, more maintainable component-based structure.
+
+Systems are being separated into focused responsibilities such as:
+
+- `PlayerController` for coordination
+- `PlayerMovement` for navigation and locomotion
+- `PlayerTargeting` for target ownership and selection
+- `PlayerInteraction` for combat, pickup, and mining actions
+- `PlayerEffects` for click feedback, hit effects, and target visuals
+- `CharacterAnimationController` as a shared animation wrapper
+- `PlayerInventory` and `PlayerEquipment` for progression systems
+
+This structure makes it easier to test, expand, and refactor systems independently.
+
+### Refactoring as the Project Grows
+A large part of this project has been revisiting earlier implementations and improving them as new requirements appeared.
 
 Examples include:
-- separating movement, combat, effects, and animation responsibilities
-- reusing a shared animation wrapper across player and enemy characters
-- isolating systems so they can be tested and extended more easily
-
-### Refactoring Tutorial Code
-Some features began from tutorial-inspired foundations, but were then reworked to better reflect my own coding style and understanding.
-
-This includes:
-- restructuring large controller scripts
-- improving animation handling
-- replacing hard-coded logic with reusable methods
-- adapting systems to support future expansion
+- splitting player logic into smaller focused scripts
+- introducing shared animation wrappers
+- separating UI concerns from gameplay concerns
+- replacing temporary booleans with clearer equipment/inventory systems
+- evolving simple pickups into inventory-aware pickups
 
 ### Gameplay Programming Focus
-This repository is primarily focused on **gameplay systems**, including:
-- AI movement
+The project is strongly centered on gameplay programming and runtime systems, including:
+
 - player input handling
+- AI movement
 - interaction flow
-- combat timing
-- animation state communication
-- camera behaviour
+- tool-gated resource gathering
+- animation parameter driving
+- combat timing and action states
+- inventory/equipment state management
+- UI integration with gameplay systems
 
 ---
 
@@ -120,32 +137,18 @@ This repository is primarily focused on **gameplay systems**, including:
 
 - Unity 6 development
 - C# gameplay programming
-- Object-oriented programming
+- Object-oriented design
 - Component-based architecture
-- NavMesh-based movement and AI
-- Animation blend trees and triggers
+- NavMesh movement and AI
+- Animation blend trees and trigger-based actions
+- Runtime inventory and equipment systems
+- UI system integration
 - Refactoring and code organisation
-- Debugging and iterative improvement
-- Building reusable systems for future expansion
+- Debugging and iterative feature development
 
 ---
 
-## Current Development Goals
-
-Planned or in-progress areas include:
-
-- Enemy combat and aggro behaviour
-- Enemy hit reactions and death handling
-- Loot drops and item collection loop
-- Sprint implementation and sprint animation
-- Improved combat feedback
-- Health bars and UI systems
-- More enemy behaviour states
-- Expanded world interaction
-
----
-
-## Project Structure
+## Current Project Structure
 
 ```text
 Assets/
@@ -153,35 +156,64 @@ Assets/
 │   ├── Player/
 │   │   ├── PlayerController.cs
 │   │   ├── PlayerMovement.cs
-│   │   ├── PlayerCombat.cs
-│   │   └── PlayerEffects.cs
+│   │   ├── PlayerTargeting.cs
+│   │   ├── PlayerInteraction.cs
+│   │   ├── PlayerEffects.cs
+│   │   ├── PlayerInventory.cs
+│   │   ├── PlayerEquipment.cs
+│   │   └── PickaxePickup.cs
+│   ├── Inventory/
+│   │   ├── InventoryItemData.cs
+│   │   ├── InventorySlot.cs
+│   │   ├── InventoryPickup.cs
+│   │   ├── InventoryGridUI.cs
+│   │   ├── InventorySlotUI.cs
+│   │   ├── EquipmentSlotUI.cs
+│   │   └── PlayerEquipmentUI.cs
 │   ├── Characters/
 │   │   └── CharacterAnimationController.cs
 │   ├── Enemies/
 │   │   ├── EnemyWander.cs
 │   │   └── EnemyAnimationDriver.cs
+│   ├── Resources/
+│   │   ├── OreNode.cs
+│   │   └── ResourcePickup.cs
 │   └── ...
 ├── Animations/
 ├── Prefabs/
+├── ScriptableObjects/
 ├── Scenes/
 └── ...
 ```
 
 ---
 
-## What I’ve Focused On As A Junior Developer
+## What This Project Shows About Me
 
-As someone working toward a junior gameplay/software role, I’ve used this project to develop habits that are valuable in a professional environment:
+As a junior developer, I want my work to show more than just “I can make a feature work.”
 
-- Writing code that is easier to extend
-- Reducing tightly coupled logic
-- Naming things clearly and consistently
-- Iterating on systems instead of settling for the first version
-- Thinking about how a feature fits into the wider project
-- Improving readability and maintainability as the project evolves
+I want it to show that I am thinking about:
 
-This project reflects the way I want to work in a team setting:  
-**curious, practical, iterative, and focused on writing code that can grow with the project.**
+- how systems fit together
+- how code can be improved over time
+- how features should be structured so they can grow
+- how to separate responsibilities instead of letting everything live in one script
+- how to build in a way that would be easier to maintain in a team environment
+
+This project reflects the way I want to work professionally: practical, curious, iterative, and focused on building systems cleanly rather than just quickly.
+
+---
+
+## Development Approach
+
+The way I am building this project is intentional:
+
+1. Implement a working version of a feature  
+2. Test it in-engine  
+3. Refactor when the responsibility becomes too broad  
+4. Build the next system on top of that cleaner structure  
+
+This has helped me practise a workflow that feels closer to real development than simply building isolated mechanics.
 
 ---
 
@@ -190,43 +222,50 @@ This project reflects the way I want to work in a team setting:
 1. Open the project in **Unity 6**
 2. Load the main scene
 3. Press Play
-4. Use mouse input to:
-   - click to move
-   - target interactables/enemies
-   - interact with items
-   - control the camera zoom
+
+Current interactions include:
+- click to move
+- target enemies, items, and resource nodes
+- mine resources once the pickaxe is equipped
+- collect item pickups
+- open inventory and view equipment UI
+- use sprint and stamina UI systems
 
 ---
 
-## Future Improvements
+## Current / Planned Improvements
 
-Some areas I want to continue improving include:
+The next areas I want to expand include:
 
-- stronger AI state handling
-- cleaner separation of shared combat logic
-- more robust UI feedback
-- inventory and item systems
-- more polished enemy behaviour
-- better animation event workflows
-- improved visual feedback during combat
+- enemy combat and aggro behaviour
+- enemy hit reaction and death flow
+- loot and reward loops
+- more complete equipment support
+- item detail panels and inventory polish
+- better combat feedback
+- tool visuals on the player character
+- stronger enemy state handling
+- expanded world interaction and progression systems
 
 ---
 
 ## Repository Purpose
 
-This repository is part of my portfolio as a **junior developer** and is intended to demonstrate:
-- practical Unity/C# development ability
-- system design thinking
-- willingness to refactor and improve code
-- a strong interest in gameplay programming
+This repository is part of my portfolio for junior development roles and is intended to demonstrate:
+
+- practical Unity and C# ability
+- gameplay programming fundamentals
+- code organisation and refactoring
+- willingness to improve systems instead of leaving them in prototype form
+- the ability to keep building beyond a basic tutorial outcome
 
 ---
 
 ## About Me
 
-I’m a junior developer with a strong interest in **gameplay systems**, **interactive software**, and **writing clean, maintainable code**.
+I’m a junior developer with a strong interest in gameplay systems, interactive software, and writing maintainable code.
 
-This project is one of the ways I’m continuing to build practical experience outside of formal employment by creating, refining, and documenting systems that reflect real development thinking.
+I use personal projects like this to build practical experience, strengthen my technical decision-making, and show how I approach development when given ownership of a feature or system.
 
 ---
 
@@ -240,8 +279,9 @@ This project is one of the ways I’m continuing to build practical experience o
 
 ## Notes
 
-This project is actively evolving, and the repository is intended to showcase both:
-- progress over time
-- the way I approach learning, iteration, and technical problem-solving
+This project is actively evolving and is intended to show both:
 
-If you're viewing this as part of an application or portfolio review, thank you for taking the time to look through my work.
+- the current state of the prototype
+- the progression of my development process over time
+
+If you’re viewing this as part of an application or portfolio review, thank you for taking the time to look through my work.
