@@ -26,9 +26,13 @@ public class InventoryItemData : ScriptableObject
     [Header("Tool Settings")]
     [SerializeField] private ToolType toolType = ToolType.None;
 
+    [Header("Weapon Settings")]
+    [SerializeField] private WeaponType weaponType = WeaponType.None;
+
     public string ItemId => itemId;
     public string ItemName => itemName;
     public Sprite Icon => icon;
     public ItemCategory Category => category;
     public ToolType ToolType => toolType;
+    public WeaponType WeaponType => weaponType;
 }
