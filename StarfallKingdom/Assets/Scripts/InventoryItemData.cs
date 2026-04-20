@@ -4,6 +4,7 @@ public enum ItemCategory
 {
     Material,
     Tool,
+    Weapon,
     Quest,
     Valuable
 }
