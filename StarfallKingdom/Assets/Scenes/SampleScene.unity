@@ -3996,6 +3996,7 @@ GameObject:
   - component: {fileID: 1609474973}
   - component: {fileID: 1609474975}
   - component: {fileID: 1609474976}
+  - component: {fileID: 1609474977}
   m_Layer: 7
   m_Name: Item Pickup
   m_TagString: Interactable
@@ -4072,6 +4073,19 @@ MonoBehaviour:
   shouldOscillate: 1
   oscillationHeight: 0.25
   oscillationSpeed: 2
+--- !u!114 &1609474977
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1609474972}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b8db0acfb35e6844b31161b19f01a4f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::WeaponPickup
+  weaponItemData: {fileID: 11400000, guid: 7db5179c7c11efc429eb54f6b3c5d198, type: 2}
 --- !u!1 &1689468713
 GameObject:
   m_ObjectHideFlags: 0
@@ -5536,6 +5550,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEquipment
   equippedPickaxe: {fileID: 0}
+  equippedWeapon: {fileID: 0}
 --- !u!1 &919132148973134528
 GameObject:
   m_ObjectHideFlags: 0
