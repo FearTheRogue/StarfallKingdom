@@ -24,6 +24,12 @@ public class Interactable : MonoBehaviour
             return;
         }
 
+        if (TryGetComponent(out WeaponPickup weaponPickup))
+        {
+            weaponPickup.Collect(playerInteraction);
+            return;
+        }
+
         if (TryGetComponent(out InventoryPickup inventoryPickup))
         {
             inventoryPickup.Collect(playerInteraction.Inventory);
