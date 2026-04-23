@@ -18,7 +18,7 @@ public class PlayerEquipmentUI : MonoBehaviour
 
         if (weaponSlotUI != null)
         {
-            weaponSlotUI.SetSlot(null, "No Weapon");
+            weaponSlotUI.SetSlot(playerEquipment.EquippedWeapon, "No Weapon");
         }
     }
 }
