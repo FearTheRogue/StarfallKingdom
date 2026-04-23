@@ -14,7 +14,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::InventoryItemData
   itemId: sword
   itemName: Sword
-  icon: {fileID: 0}
+  icon: {fileID: 21300000, guid: 9d01aa38ab5a3ee42a009c9d3daaf144, type: 3}
   category: 2
   toolType: 0
   weaponType: 1

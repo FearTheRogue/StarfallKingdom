@@ -29,7 +29,7 @@ public class PlayerEquipment : MonoBehaviour
     {
         if(itemData == null) return false;
 
-        if(itemData.Category != ItemCategory.Weapon || itemData.WeaponType == WeaponType.Sword) return false;
+        if(itemData.Category != ItemCategory.Weapon || itemData.WeaponType == WeaponType.None) return false;
 
         equippedWeapon = itemData;
         return true;

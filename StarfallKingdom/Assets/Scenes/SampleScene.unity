@@ -295,7 +295,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerEquipmentUI
   playerEquipment: {fileID: 919132148444145761}
   pickaxeSlotUI: {fileID: 5060390628867032191}
-  weaponSlotUI: {fileID: 0}
+  weaponSlotUI: {fileID: 611544836}
 --- !u!114 &13228619
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1434,12 +1434,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 611544834}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 82fe0244539a8904795db3948970b6d4, type: 3}
+  m_Script: {fileID: 11500000, guid: 856a091699ef15b469df628df7a39c71, type: 3}
   m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::InventorySlotUI
-  itemNameText: {fileID: 1367054846}
-  quantityText: {fileID: 1356711263}
+  m_EditorClassIdentifier: Assembly-CSharp::EquipmentSlotUI
   iconImage: {fileID: 829623085}
+  labelText: {fileID: 1367054846}
+  emptySprite: {fileID: 0}
+  emptyLabel: No Pickaxe
 --- !u!95 &644656595
 Animator:
   serializedVersion: 7
@@ -10635,12 +10636,12 @@ SceneRoots:
   m_Roots:
   - {fileID: 410087041}
   - {fileID: 832575519}
+  - {fileID: 1165097822}
   - {fileID: 549732775}
   - {fileID: 330585546}
   - {fileID: 543450652162388707}
   - {fileID: 543450652708124794}
   - {fileID: 1609474974}
-  - {fileID: 1165097822}
   - {fileID: 811719273}
   - {fileID: 1931003505}
   - {fileID: 453403728200169443}
