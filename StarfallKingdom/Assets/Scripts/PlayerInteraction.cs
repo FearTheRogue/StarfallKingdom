@@ -7,6 +7,7 @@ using UnityEngine;
 [RequireComponent(typeof(PlayerTargeting))]
 [RequireComponent(typeof(PlayerInventory))]
 [RequireComponent(typeof(PlayerEquipment))]
+[RequireComponent(typeof(PlayerToolVisuals))]
 public class PlayerInteraction : MonoBehaviour
 {
     [Header("Combat")]
@@ -24,6 +25,7 @@ public class PlayerInteraction : MonoBehaviour
     private PlayerTargeting targeting;
     private PlayerInventory inventory;
     private PlayerEquipment equipment;
+    private PlayerToolVisuals toolVisuals;
 
     private Coroutine currentActionRoutine;
     private bool isBusy;
@@ -38,6 +40,7 @@ public class PlayerInteraction : MonoBehaviour
         targeting = GetComponent<PlayerTargeting>();
         inventory = GetComponent<PlayerInventory>();
         equipment = GetComponent<PlayerEquipment>();
+        toolVisuals = GetComponent<PlayerToolVisuals>();
     }
 
     public bool IsBusy => isBusy;
