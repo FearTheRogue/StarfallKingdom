@@ -154,6 +154,12 @@ public class PlayerInteraction : MonoBehaviour
     {
         isBusy = true;
         movement.SetStopped(true);
+
+        if (toolVisuals != null && equipment != null && equipment.HasPickaxe)
+        {
+            toolVisuals.ShowPickaxe();
+        }
+
         animationController.TriggerAttack();
 
         yield return new WaitForSeconds(attackDelay);
@@ -161,6 +167,11 @@ public class PlayerInteraction : MonoBehaviour
         ApplyResourceHit();
 
         yield return new WaitForSeconds(Mathf.Max(0f, attackSpeed - attackDelay));
+
+        if (toolVisuals != null)
+        {
+            toolVisuals.HidePickaxe();
+        }
 
         isBusy = false;
         movement.SetStopped(false);
