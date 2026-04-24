@@ -67,6 +67,11 @@ public class PlayerInteraction : MonoBehaviour
 
     public void FinishPickupAction()
     {
+        if (toolVisuals != null)
+        {
+            toolVisuals.HidePickaxe();
+        }
+
         movement.SetStopped(false);
         isBusy = false;
         currentActionRoutine = null;
@@ -78,6 +83,11 @@ public class PlayerInteraction : MonoBehaviour
         {
             StopCoroutine(currentActionRoutine);
             currentActionRoutine = null;
+        }
+
+        if (toolVisuals != null)
+        {
+            toolVisuals.HidePickaxe();
         }
 
         isBusy = false;
