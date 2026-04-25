@@ -650,11 +650,6 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 0dc0a7cae0c8771459dba409e9cddc26, type: 3}
---- !u!1 &204937874 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5383972421584680955, guid: 0dc0a7cae0c8771459dba409e9cddc26, type: 3}
-  m_PrefabInstance: {fileID: 204937873}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &204937875 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 5383972421584448475, guid: 0dc0a7cae0c8771459dba409e9cddc26, type: 3}
@@ -755,6 +750,80 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 205498390}
   m_CullTransparentMesh: 1
+--- !u!1001 &244593605
+PrefabInstance:
+  m_ObjectHideFlags: 0
+  serializedVersion: 2
+  m_Modification:
+    serializedVersion: 3
+    m_TransformParent: {fileID: 6025683944779123581}
+    m_Modifications:
+    - target: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_LocalScale.x
+      value: 0.44315
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_LocalScale.y
+      value: 0.44315
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_LocalScale.z
+      value: 0.44315
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_LocalPosition.x
+      value: 0.00062
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.00329
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -0.00096
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.60190755
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: 0.3731067
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: 0.50071764
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: 0.4977757
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: 182.828
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -102.733
+      objectReference: {fileID: 0}
+    - target: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -103.07901
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+      propertyPath: m_Name
+      value: Sword
+      objectReference: {fileID: 0}
+    m_RemovedComponents: []
+    m_RemovedGameObjects: []
+    m_AddedGameObjects: []
+    m_AddedComponents: []
+  m_SourcePrefab: {fileID: 100100000, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+--- !u!4 &244593606 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 234c0289c868dc4468d416d102ceea51, type: 3}
+  m_PrefabInstance: {fileID: 244593605}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1 &271930550
 GameObject:
   m_ObjectHideFlags: 0
@@ -5648,7 +5717,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 378d41fee31b6dd4d9e66ecac8836cec, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerToolVisuals
-  pickaxeVisuals: {fileID: 204937874}
+  pickaxeVisual: {fileID: 0}
+  weaponVisual: {fileID: 0}
 --- !u!1 &919132148973134528
 GameObject:
   m_ObjectHideFlags: 0
@@ -9071,6 +9141,7 @@ Transform:
   m_LocalScale: {x: 0.99999994, y: 0.9999998, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 244593606}
   - {fileID: 204937875}
   - {fileID: 7721484631594518430}
   - {fileID: 5291820458420539197}

@@ -1,31 +1,56 @@
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.TextCore.Text;
 
 public class PlayerToolVisuals : MonoBehaviour
 {
     [Header("Tool Visuals")]
-    [SerializeField] private GameObject pickaxeVisuals;
+    [SerializeField] private GameObject pickaxeVisual;
+    [SerializeField] private GameObject weaponVisual;
 
     public void ShowPickaxe()
     {
-        if (pickaxeVisuals != null)
+        if (pickaxeVisual != null)
         {
-            pickaxeVisuals.SetActive(true);
+            pickaxeVisual.SetActive(true);
         }
     }
 
     public void HidePickaxe()
     {
-        if (pickaxeVisuals != null)
+        if (pickaxeVisual != null)
         {
-            pickaxeVisuals.SetActive(false);    
+            pickaxeVisual.SetActive(false);    
         }
     }
 
     public void SetPickaxeVisible(bool visible)
     {
-        if (pickaxeVisuals != null)
+        if (pickaxeVisual != null)
         {
-            pickaxeVisuals.SetActive(visible);
+            pickaxeVisual.SetActive(visible);
         }
+    }
+
+    public void ShowWeapon()
+    {
+        if (weaponVisual != null)
+        {
+            weaponVisual.SetActive(true);
+        }
+    }
+
+    public void HideWeapon()
+    {
+        if (weaponVisual != null)
+        {
+            weaponVisual.SetActive(false);
+        }
+    }
+
+    public void HideAll()
+    {
+        HidePickaxe();
+        HideWeapon();
     }
 }
