@@ -1,4 +1,5 @@
 using System.Collections;
+using System.ComponentModel;
 using UnityEngine;
 
 [RequireComponent(typeof(PlayerMovement))]
@@ -134,13 +135,27 @@ public class PlayerInteraction : MonoBehaviour
     private IEnumerator AttackRoutine()
     {
         isBusy = true;
+        movement.SetStopped(true);
+
+        if (toolVisuals != null && equipment != null && equipment.HasWeapon)
+        {
+            toolVisuals.ShowWeapon();
+        }
+
         animationController.TriggerAttack();
 
         yield return new WaitForSeconds(attackDelay);
+
         ApplyAttack();
 
         yield return new WaitForSeconds(Mathf.Max(0f, attackSpeed - attackDelay));
 
+        if (toolVisuals != null)
+        {
+            toolVisuals.HideWeapon();
+        }
+
+        movement.SetStopped(false);
         isBusy = false;
         currentActionRoutine = null;
     }
