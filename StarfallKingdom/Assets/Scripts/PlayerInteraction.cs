@@ -70,7 +70,7 @@ public class PlayerInteraction : MonoBehaviour
     {
         if (toolVisuals != null)
         {
-            toolVisuals.HidePickaxe();
+            toolVisuals.HideAll();
         }
 
         movement.SetStopped(false);
@@ -88,7 +88,7 @@ public class PlayerInteraction : MonoBehaviour
 
         if (toolVisuals != null)
         {
-            toolVisuals.HidePickaxe();
+            toolVisuals.HideAll();
         }
 
         isBusy = false;
@@ -195,7 +195,7 @@ public class PlayerInteraction : MonoBehaviour
 
         if (toolVisuals != null)
         {
-            toolVisuals.HidePickaxe();
+            toolVisuals.HideAll();
         }
 
         isBusy = false;
