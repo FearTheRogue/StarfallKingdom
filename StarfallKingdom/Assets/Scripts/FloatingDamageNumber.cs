@@ -13,9 +13,12 @@ public class FloatingDamageNumber : MonoBehaviour
 
     private Color startColour;
     private float timer;
+    private Camera mainCamera;
 
     private void Awake()
     {
+        mainCamera = Camera.main;
+
         if (textMesh == null)
         {
             textMesh = GetComponentInChildren<TextMeshPro>();
@@ -32,6 +35,11 @@ public class FloatingDamageNumber : MonoBehaviour
         timer += Time.deltaTime;
 
         transform.position += Vector3.up * moveSpeed * Time.deltaTime;
+
+        if (mainCamera != null)
+        {
+            transform.forward = mainCamera.transform.forward;
+        }
 
         if (textMesh != null && timer >= fadeStartTime)
         {
