@@ -17,7 +17,7 @@ public class TrainingDummy : MonoBehaviour
         actor = GetComponent<Actor>();
     }
 
-    public void OnDamage()
+    public void OnDamaged()
     {
         if (invulnerable)
         {

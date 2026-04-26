@@ -17,6 +17,11 @@ public class Actor : MonoBehaviour
     {
         currentHealth -= amount;
 
+        if (TryGetComponent(out TrainingDummy trainingDummy))
+        {
+            trainingDummy.OnDamaged();
+        }
+
         if (currentHealth <= 0)
         {
             currentHealth = 0;
