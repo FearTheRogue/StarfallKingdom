@@ -17,6 +17,11 @@ public class Actor : MonoBehaviour
     {
         currentHealth -= amount;
 
+        if (TryGetComponent(out DamageNumberSpawner damageNumberSpawner))
+        {
+            damageNumberSpawner.SpawnDamageNumber(amount);
+        }
+
         if (TryGetComponent(out TrainingDummy trainingDummy))
         {
             trainingDummy.OnDamaged();
