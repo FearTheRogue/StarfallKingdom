@@ -10,20 +10,18 @@ public class TrainingDummy : MonoBehaviour
     [SerializeField] private float resetDelay = 0.5f;
 
     private Actor actor;
-    private int maxHealth;
     private Coroutine resetRoutine;
 
     private void Awake()
     {
         actor = GetComponent<Actor>();
-        maxHealth = actor.currentHealth;
     }
 
     public void OnDamage()
     {
         if (invulnerable)
         {
-            actor.currentHealth = maxHealth;
+            actor.ResetHealth();
             return;
         }
 
@@ -44,7 +42,7 @@ public class TrainingDummy : MonoBehaviour
 
         if (actor != null)
         {
-            actor.currentHealth = maxHealth;
+            actor.ResetHealth();
         }
 
         resetRoutine = null;
