@@ -88,7 +88,7 @@ public class EnemyCombat : MonoBehaviour
     {
         isAttacking = true;
         agent.isStopped = true;
-        animationController.TriggerAttack();
+        animationController.TriggerWeaponAttack();
 
         yield return new WaitForSeconds(attackHitDelay);
 

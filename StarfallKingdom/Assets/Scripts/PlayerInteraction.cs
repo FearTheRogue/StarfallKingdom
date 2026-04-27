@@ -142,9 +142,16 @@ public class PlayerInteraction : MonoBehaviour
             toolVisuals.ShowWeapon();
         }
 
-        animationController.TriggerAttack();
+        if (equipment != null && equipment.HasWeapon)
+        {
+            animationController.TriggerWeaponAttack();
+        }
+        else
+        {
+            animationController.TriggerPunch();
+        }
 
-        yield return new WaitForSeconds(attackDelay);
+            yield return new WaitForSeconds(attackDelay);
 
         ApplyAttack();
 
@@ -185,7 +192,7 @@ public class PlayerInteraction : MonoBehaviour
             toolVisuals.ShowPickaxe();
         }
 
-        animationController.TriggerAttack();
+        animationController.TriggerWeaponAttack();
 
         yield return new WaitForSeconds(attackDelay);
 

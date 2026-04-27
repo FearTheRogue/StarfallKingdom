@@ -22,7 +22,7 @@ public class CharacterAnimationController : MonoBehaviour
         animator.SetFloat(SpeedHash, speed);
     }
 
-    public void TriggerAttack()
+    public void TriggerWeaponAttack()
     {
         animator.SetTrigger(AttackHash);
     }
