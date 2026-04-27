@@ -15,7 +15,7 @@ public class PlayerInteraction : MonoBehaviour
     [SerializeField] private float attackSpeed = 1.5f;
     [SerializeField] private float attackDelay = 0.3f;
     [SerializeField] private float interactionDistance = 1.5f;
-    [SerializeField] private int attackDamage = 1;
+    [SerializeField] private int punchDamage = 1;
 
     [Header("Tools")]
     [SerializeField] private bool debugBypassPickaxeRequirement = false;
@@ -223,6 +223,16 @@ public class PlayerInteraction : MonoBehaviour
         {
            targeting.ClearTarget();
         }
+    }
+
+    private int GetCurrentAttackDamage()
+    {
+        if (equipment != null && equipment.EquippedWeapon != null)
+        {
+            return equipment.EquippedWeapon.WeaponDamage;
+        }
+
+        return punchDamage;
     }
 
     private void ApplyResourceHit()
