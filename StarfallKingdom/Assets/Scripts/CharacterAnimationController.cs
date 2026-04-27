@@ -4,6 +4,7 @@ using UnityEngine;
 public class CharacterAnimationController : MonoBehaviour
 {
     private static readonly int SpeedHash = Animator.StringToHash("Speed");
+    private static readonly int PunchHash = Animator.StringToHash("Punch");
     private static readonly int AttackHash = Animator.StringToHash("Attack");
     private static readonly int HitHash = Animator.StringToHash("Hit");
     private static readonly int DeadHash = Animator.StringToHash("Dead");
@@ -24,6 +25,11 @@ public class CharacterAnimationController : MonoBehaviour
     public void TriggerAttack()
     {
         animator.SetTrigger(AttackHash);
+    }
+
+    public void TriggerPunch()
+    {
+        animator.SetTrigger(PunchHash);
     }
 
     public void TriggerHit()
