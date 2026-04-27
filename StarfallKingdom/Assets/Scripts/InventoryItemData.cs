@@ -29,6 +29,7 @@ public class InventoryItemData : ScriptableObject
 
     [Header("Weapon Settings")]
     [SerializeField] private WeaponType weaponType = WeaponType.None;
+    [SerializeField] private int weaponDamage = 1;
 
     public string ItemId => itemId;
     public string ItemName => itemName;
@@ -36,4 +37,5 @@ public class InventoryItemData : ScriptableObject
     public ItemCategory Category => category;
     public ToolType ToolType => toolType;
     public WeaponType WeaponType => weaponType;
+    public int WeaponDamage => weaponDamage;
 }
