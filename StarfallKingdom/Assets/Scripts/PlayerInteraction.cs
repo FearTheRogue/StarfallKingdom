@@ -217,7 +217,7 @@ public class PlayerInteraction : MonoBehaviour
         }
 
         effects.SpawnHitEffect(currentTarget.transform.position);
-        targetActor.TakeDamage(attackDamage);
+        targetActor.TakeDamage(GetCurrentAttackDamage());
 
         if (targetActor.currentHealth <= 0)
         {
